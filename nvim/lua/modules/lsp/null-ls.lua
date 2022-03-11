@@ -15,6 +15,7 @@ local sources = {
   b.formatting.stylua,
   b.formatting.rustfmt,
   b.diagnostics.yamllint,
+  b.formatting.google_java_format,
 }
 
 local M = {}
