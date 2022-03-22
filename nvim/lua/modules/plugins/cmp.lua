@@ -1,7 +1,15 @@
 -- https://github.com/hrsh7th/nvim-cmp
-local cmp = require('cmp')
-local luasnip = require('luasnip')
-local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+local cmp_status_ok, cmp = pcall(require, "cmp")
+if not cmp_status_ok then
+  return
+end
+
+local snip_status_ok, luasnip = pcall(require, "luasnip")
+if not snip_status_ok then
+  return
+end
+
+-- local cmp_autopairs = require('nvim-autopairs.completion.cmp')
 local lspkind = require('lspkind')
 
 local source_mapping = {
@@ -130,8 +138,8 @@ cmp.setup({
     border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
   },
   sources = {
-    { name = "cmp_tabnine" },
     { name = 'nvim_lsp' },
+    { name = "cmp_tabnine" },
     { name = 'luasnip' },
     { name = 'buffer', keyword_length = 5, max_item_count = 10 },
     { name = 'path' },
