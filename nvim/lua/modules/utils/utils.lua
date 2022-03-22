@@ -31,6 +31,9 @@ end
 M.nmap = function(...)
   M.map('n', ...)
 end
+M.vmap = function(...)
+  M.map('v', ...)
+end
 M.omap = function(...)
   M.map('o', ...)
 end

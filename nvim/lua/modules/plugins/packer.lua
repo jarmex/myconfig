@@ -70,6 +70,15 @@ return packer.startup(function(use)
     end
   })
 
+  use({"b0o/SchemaStore.nvim"})
+
+  use({
+    "filipdutescu/renamer.nvim",
+    config = function()
+      require('modules.plugins.renamer')
+    end,
+  })
+
   use({
     "SmiteshP/nvim-gps",
     requires = "nvim-treesitter/nvim-treesitter",
@@ -297,6 +306,9 @@ return packer.startup(function(use)
       require('modules.plugins.dap')
     end
   }
+  use "theHamsta/nvim-dap-virtual-text"
+  use "rcarriga/nvim-dap-ui"
+  use "Pocco81/DAPInstall.nvim"
 
   use {
     "nathom/filetype.nvim",
@@ -318,8 +330,34 @@ return packer.startup(function(use)
       require"fidget".setup{}
     end
   })
+  -- refactoring 
+  use {
+    "ThePrimeagen/refactoring.nvim",
+    requires = {
+      {"nvim-lua/plenary.nvim"},
+      {"nvim-treesitter/nvim-treesitter"}
+    },
+    config = function()
+      require('modules.plugins.refactoring')
+    end
+  }
 
   -- adding JAVA plugins 
+  use {
+    "mfussenegger/nvim-jdtls"
+  }
+
+  use({
+    "nacro90/numb.nvim",
+    config = function()
+      require('modules.plugins.numb')
+    end
+  })
+  use ({
+    "antoinemadec/FixCursorHold.nvim", -- This is needed to fix lsp doc highlight
+  })
+
+  use "RRethy/vim-illuminate"
 
   if packer_bootstrap then
       require('packer').sync()

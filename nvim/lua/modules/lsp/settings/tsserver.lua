@@ -1,26 +1,10 @@
-local lspconfig = require('lspconfig')
-local u = require('modules.utils.utils')
+local status_ok, packer = pcall(require, "packer")
+if not status_ok then
+  return
+end
 
-local ts_utils_settings = {
-  enable_import_on_completion = true,
-  import_all_scan_buffers = 100,
-  eslint_bin = 'eslint_d',
-  eslint_enable_diagnostics = true,
-  eslint_opts = {
-    condition = function(utils)
-      return utils.root_has_file('.eslintrc.js')
-    end,
-    diagnostics_format = '#{m} [#{c}]',
-  },
-  enable_formatting = true,
-  formatter = 'eslint_d',
-  update_imports_on_move = true,
-  -- filter out dumb module warning
-  filter_out_diagnostics_by_code = { 80001 },
-   -- inlay hints
-  auto_inlay_hints = true,
-  inlay_hints_highlight = "Comment",
-}
+
+local u = require('modules.utils.utils')
 
 local ts_util_config = {
   debug = false,
@@ -54,13 +38,6 @@ local ts_util_config = {
     Type = {},
     Parameter = {},
     Enum = {},
-    -- Example format customization for `Type` kind:
-    -- Type = {
-    --     highlight = "Comment",
-    --     text = function(text)
-    --         return "->" .. text:sub(2)
-    --     end,
-    -- },
   },
 
   -- update imports on file move
@@ -69,7 +46,7 @@ local ts_util_config = {
   watch_dir = nil,
 }
 
-lspconfig.tsserver.setup({
+return {
   init_options = require("nvim-lsp-ts-utils").init_options,
   on_attach = function(client, bufnr)
     local ts_utils = require("nvim-lsp-ts-utils")
@@ -88,5 +65,5 @@ lspconfig.tsserver.setup({
   flags = {
     debounce_text_changes = 150,
   },
-})
+}
 

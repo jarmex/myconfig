@@ -18,14 +18,10 @@ local sources = {
   b.formatting.google_java_format,
 }
 
-local M = {}
 
-M.setup = function(on_attach)
-  null_ls.setup({
-    debug = false,
-   -- on_attach = on_attach,
-    sources = sources,
-  })
-end
+null_ls.setup({
+  debug = false,
+  -- on_attach = on_attach,
+  sources = sources,
+})
 
-return M
