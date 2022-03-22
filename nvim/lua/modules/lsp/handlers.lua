@@ -5,7 +5,6 @@ local M = {}
 M.setup = function()
   local icons = require "modules.utils.icons"
   local signs = {
-
     { name = "DiagnosticSignError", text = icons.diagnostics.Error },
     { name = "DiagnosticSignWarn", text = icons.diagnostics.Warning },
     { name = "DiagnosticSignHint", text = icons.diagnostics.Hint },
@@ -74,7 +73,7 @@ local function lsp_keymaps(bufnr)
   u.lua_command('LspCodeAction', 'vim.lsp.buf.code_action()')
 
   -- bindings
-  u.buf_map('n', '<Leader>R', ':LspRename<CR>', nil, bufnr)
+  -- u.buf_map('n', '<Leader>R', ':LspRename<CR>', nil, bufnr)
   u.buf_map('n', 'gy', ':LspTypeDef<CR>', nil, bufnr)
   u.buf_map('n', 'K', ':LspHover<CR>', nil, bufnr)
   u.buf_map('n', '[d', ':LspDiagPrev<CR>', nil, bufnr)
@@ -85,7 +84,7 @@ local function lsp_keymaps(bufnr)
   u.buf_map('n', '<Leader>d', ':LspProblem<CR>', nil, bufnr)
   u.buf_map('n', '<C-k>', ':LspSignatureHelp<CR>', nil, bufnr)
   u.buf_map('n', '<Leader>q', ':LspDiagList<CR>', nil, bufnr)
-  u.buf_map('n', 'ga', ':LspCodeAction<CR>', nill, bufnr)
+  u.buf_map('n', 'ga', ':LspCodeAction<CR>', nil, bufnr)
   -- u.buf_map('i', '<C-x><C-x>', '<cmd>LspSignatureHelp<CR>', nil, bufnr)
 
   -- telescope
