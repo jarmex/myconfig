@@ -357,7 +357,12 @@ return packer.startup(function(use)
     "antoinemadec/FixCursorHold.nvim", -- This is needed to fix lsp doc highlight
   })
 
-  use "RRethy/vim-illuminate"
+  --[[ use ({
+    "RRethy/vim-illuminate",
+    config = function()
+      vim.g.Illuminate_highlightUnderCursor = 0
+    end
+  }) ]]
 
   if packer_bootstrap then
       require('packer').sync()
