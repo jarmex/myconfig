@@ -1,4 +1,4 @@
-local status_ok, packer = pcall(require, "packer")
+local status_ok, _ = pcall(require, "packer")
 if not status_ok then
   return
 end
@@ -56,11 +56,11 @@ return {
     ts_utils.setup_client(client)
 
     -- no default maps, so you may want to define some here
-    local opts = { silent = true }
+    -- local opts = { silent = true }
     u.buf_map('n', '<Leader>gs', ':TSLspOrganize<CR>', nil, bufnr)
     u.buf_map('n', '<Leader>gi', ':TSLspImportAll<CR>', nil, bufnr)
     u.buf_map('n', '<Leader>gr', ':TSLspRenameFileCR>', nil, bufnr)
-    u.buf_map('n', '<Leader>ii', ':TSLspImportCurrent<CR>', nill, bufnr)
+    u.buf_map('n', '<Leader>ii', ':TSLspImportCurrent<CR>', nil, bufnr)
   end,
   flags = {
     debounce_text_changes = 150,
