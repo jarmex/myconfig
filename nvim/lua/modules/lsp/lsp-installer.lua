@@ -21,7 +21,7 @@ lsp_installer.on_server_ready(function(server)
     opts = vim.tbl_deep_extend("force", yaml_opts, opts)
   end
 
-  if server.name == "tsserver" then 
+  if server.name == "tsserver" then
     local tsserver_opts = require "modules.lsp.settings.tsserver"
     opts = vim.tbl_deep_extend("force", tsserver_opts , opts)
   end
@@ -31,10 +31,10 @@ lsp_installer.on_server_ready(function(server)
     opts = vim.tbl_deep_extend("force", sumneko_opts, opts)
   end
 
-  --[[ if server.name == "pyright" then
+  if server.name == "pyright" then
     local pyright_opts = require "modules.lsp.settings.pyright"
     opts = vim.tbl_deep_extend("force", pyright_opts, opts)
-  end ]]
+  end
 
   if server.name == "jdtls" then
     return
