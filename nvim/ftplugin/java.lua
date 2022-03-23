@@ -23,11 +23,11 @@ extendedClientCapabilities.resolveAdditionalTextEditsSupport = true
 
 local bundles = {
   vim.fn.glob(
-    home .. "/.config/nvim/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"
+    home .. "/.local/java-debug/com.microsoft.java.debug.plugin/target/com.microsoft.java.debug.plugin-*.jar"
   ),
 }
 
-vim.list_extend(bundles, vim.split(vim.fn.glob(home .. "/.config/nvim/vscode-java-test/server/*.jar"), "\n"))
+vim.list_extend(bundles, vim.split(vim.fn.glob(home .. "/.local/vscode-java-test/server/*.jar"), "\n"))
 
 -- See `:help vim.lsp.start_client` for an overview of the supported `config` options.
 local config = {
@@ -109,18 +109,18 @@ local config = {
       };
       configuration = {
         runtimes = {
-          {
+          --[[ {
             name = "JavaSE-1.8",
             path = "/Library/Java/JavaVirtualMachines/jdk1.8.0_101.jdk/Contents/Home",
-          },
+          }, ]]
           {
             name = "JavaSE-11",
             path = "/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home",
           },
-          {
+          --[[ {
             name = "JavaSE-14",
             path = "/Library/Java/JavaVirtualMachines/adoptopenjdk-14.jdk/Contents/Home",
-          },
+          }, ]]
           {
             name = "JavaSE-17",
             path = "/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home",
@@ -141,7 +141,8 @@ local config = {
   --
   -- If you don't plan on using the debugger or other eclipse.jdt.ls plugins you can remove this
   init_options = {
-    bundles = {}
+    -- bundles = {}
+    bundles = bundles,
   },
 }
 -- This starts a new client & server,
