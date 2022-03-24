@@ -22,7 +22,7 @@ lsp_installer.on_server_ready(function(server)
   end
 
   if server.name == "tsserver" then
-    local tsserver_opts = require "modules.lsp.settings.tsserver"
+    local tsserver_opts = require("modules.lsp.settings.tsserver").config()
     opts = vim.tbl_deep_extend("force", tsserver_opts , opts)
   end
 

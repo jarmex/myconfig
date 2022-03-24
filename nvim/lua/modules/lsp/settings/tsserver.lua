@@ -3,6 +3,7 @@ if not status_ok then
   return
 end
 
+local M = {}
 
 local u = require('modules.utils.utils')
 
@@ -46,24 +47,29 @@ local ts_util_config = {
   watch_dir = nil,
 }
 
-return {
-  init_options = require("nvim-lsp-ts-utils").init_options,
-  on_attach = function(client, bufnr)
-    local ts_utils = require("nvim-lsp-ts-utils")
-    -- defaults
-    ts_utils.setup(ts_util_config)
-    -- required to fix code action ranges and filter diagnostics
-    ts_utils.setup_client(client)
+M.config = function ()
+  local config_opts = {
+    init_options = require("nvim-lsp-ts-utils").init_options,
+    flags = {
+      debounce_text_changes = 150,
+    }
+  }
+  return config_opts
+end
 
-    -- no default maps, so you may want to define some here
-    -- local opts = { silent = true }
-    u.buf_map('n', '<Leader>gs', ':TSLspOrganize<CR>', nil, bufnr)
-    u.buf_map('n', '<Leader>gi', ':TSLspImportAll<CR>', nil, bufnr)
-    u.buf_map('n', '<Leader>gr', ':TSLspRenameFileCR>', nil, bufnr)
-    u.buf_map('n', '<Leader>ii', ':TSLspImportCurrent<CR>', nil, bufnr)
-  end,
-  flags = {
-    debounce_text_changes = 150,
-  },
-}
+M.on_attach = function(client, bufnr)
+  local ts_utils = require("nvim-lsp-ts-utils")
+  -- defaults
+  ts_utils.setup(ts_util_config)
+  -- required to fix code action ranges and filter diagnostics
+  ts_utils.setup_client(client)
 
+  -- no default maps, so you may want to define some here
+  -- local opts = { silent = true }
+  u.buf_map('n', '<Leader>gs', ':TSLspOrganize<CR>', nil, bufnr)
+  u.buf_map('n', '<Leader>gi', ':TSLspImportAll<CR>', nil, bufnr)
+  u.buf_map('n', '<Leader>gr', ':TSLspRenameFileCR>', nil, bufnr)
+  u.buf_map('n', '<Leader>ii', ':TSLspImportCurrent<CR>', nil, bufnr)
+end
+
+return M;
