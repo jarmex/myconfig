@@ -1,6 +1,10 @@
 -- https://github.com/folke/trouble.nvim
+local trouble_status_ok, trouble = pcall(require, "trouble")
+if not trouble_status_ok then
+  return
+end
 
-require('trouble').setup({
+trouble.setup({
     -- "lsp_workspace_diagnostics",
     -- "lsp_document_diagnostics",
     -- "quickfix",
