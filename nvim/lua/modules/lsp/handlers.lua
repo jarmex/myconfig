@@ -98,15 +98,23 @@ M.on_attach = function(client, bufnr)
 	-- vim.notify(client.name .. " starting...")
 	if client.name == "html" then
 		client.resolved_capabilities.document_formatting = false
+		client.resolved_capabilities.document_range_formatting = false
+	end
+
+	if client.name == "jsonls" then
+		client.resolved_capabilities.document_formatting = false
+		client.resolved_capabilities.document_range_formatting = false
 	end
 
 	if client.name == "tsserver" then
 		client.resolved_capabilities.document_formatting = false
+		client.resolved_capabilities.document_range_formatting = false
 		require("modules.lsp.settings.tsserver").on_attach(client, bufnr)
 	end
 
 	if client.name == "jdt.ls" then
 		client.resolved_capabilities.document_formatting = false
+		client.resolved_capabilities.document_range_formatting = false
 		require("jdtls").setup_dap({ hotcodereplace = "auto" })
 		require("jdtls.dap").setup_dap_main_class_configs()
 	end
@@ -115,21 +123,11 @@ M.on_attach = function(client, bufnr)
 	lsp_highlight_document(client)
 end
 
-local capabilities = vim.lsp.protocol.make_client_capabilities()
-capabilities.textDocument.completion.completionItem.snippetSupport = true
-
-local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-if not status_ok then
-	return
-end
-
-M.capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
-
 function M.enable_format_on_save()
 	vim.cmd([[
     augroup format_on_save
       autocmd! 
-      autocmd BufWritePre * lua vim.lsp.buf.formatting()
+      autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()
     augroup end
   ]])
 	vim.notify("Enabled format on save")
@@ -152,6 +150,25 @@ function M.remove_augroup(name)
 	if vim.fn.exists("#" .. name) == 1 then
 		vim.cmd("au! " .. name)
 	end
+end
+
+function M.common_capabilities()
+	local capabilities = vim.lsp.protocol.make_client_capabilities()
+	capabilities.textDocument.completion.completionItem.snippetSupport = true
+	capabilities.textDocument.completion.completionItem.resolveSupport = {
+		properties = {
+			"documentation",
+			"detail",
+			"additionalTextEdits",
+		},
+	}
+
+	local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+	if status_ok then
+		capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+	end
+
+	return capabilities
 end
 
 vim.cmd([[ command! LspToggleAutoFormat execute 'lua require("modules.lsp.handlers").toggle_format_on_save()' ]])

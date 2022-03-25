@@ -102,17 +102,7 @@ return packer.startup(function(use)
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-nvim-lua",
 			"onsails/lspkind-nvim",
-			{
-				"L3MON4D3/luasnip",
-			},
 			"rafamadriz/friendly-snippets",
-			{
-				module = "nvim-autopairs",
-				"windwp/nvim-autopairs",
-				config = function()
-					require("modules.plugins.autopairs")
-				end,
-			},
 			"hrsh7th/cmp-calc",
 			{
 				"tzachar/cmp-tabnine",
@@ -124,8 +114,17 @@ return packer.startup(function(use)
 			},
 		},
 	})
+	-- snippets
+	use("L3MON4D3/LuaSnip") --snippet engine
+	use("rafamadriz/friendly-snippets") -- a bunch of snippets to use
 
-	-- Tab Nine configuration
+	-- auto pairs
+	use({
+		"windwp/nvim-autopairs",
+		config = function()
+			require("modules.plugins.autopairs")
+		end,
+	})
 
 	-- Close Buffer
 	use({
@@ -289,6 +288,9 @@ return packer.startup(function(use)
 	use({
 		"simrat39/symbols-outline.nvim",
 		cmd = { "SymbolsOutline" },
+		config = function()
+			require("modules.plugins.symbol-outline")
+		end,
 	})
 
 	-- Start Screen
@@ -357,6 +359,12 @@ return packer.startup(function(use)
 		"antoinemadec/FixCursorHold.nvim", -- This is needed to fix lsp doc highlight
 	})
 
+	use({
+		"rcarriga/nvim-notify",
+		config = function()
+			require("modules.plugins.notify")
+		end,
+	})
 	--[[ use ({
     "RRethy/vim-illuminate",
     config = function()
