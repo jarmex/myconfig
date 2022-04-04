@@ -1,29 +1,39 @@
-
 -- https://github.com/hoob3rt/lualine.nvim
-local lualine_ok, lualine = pcall(require, 'lualine')
+local lualine_ok, lualine = pcall(require, "lualine")
 if not lualine_ok then
-  return
+	return
 end
 
--- Disabling separators
+local theme = require("lualine.themes.catppuccin")
+theme.normal.c.bg = require("lualine.utils.utils").extract_highlight_colors("Normal", "bg")
 -- options = {section_separators = '', component_separators = ''}
 
-local options = { theme = 'auto', section_separators = '', component_separators = '' }
-local extensions = { 'quickfix', 'nvim-tree' }
-
--- https://github.com/nvim-lualine/lualine.nvim/wiki/Component-snippets
-local function diff_source()
-  local gitsigns = vim.b.gitsigns_status_dict
-  if gitsigns then
-    return {
-      added = gitsigns.added,
-      modified = gitsigns.changed,
-      removed = gitsigns.removed
-    }
-  end
-end
+local options = {
+	theme = "catppuccin",
+	section_separators = { left = "", right = "" },
+	component_separators = "",
+	globalstatus = true,
+	always_divide_middle = true,
+}
+local extensions = { "quickfix", "nvim-tree" }
 
 lualine.setup({
-  options = options,
-  extensions = extensions,
+	options = options,
+	sections = {
+		lualine_a = { { "mode", separator = { left = "", right = "" } } },
+		lualine_b = { "branch", "diff", "diagnostics" },
+		lualine_c = { "filename" },
+		lualine_x = { "encoding", "fileformat", "filetype" },
+		lualine_y = { "progress" },
+		lualine_z = { { "location", separator = { left = "", right = "" } } },
+	},
+	inactive_sections = {
+		lualine_a = {},
+		lualine_b = {},
+		lualine_c = { "filename" },
+		lualine_x = { "location" },
+		lualine_y = {},
+		lualine_z = {},
+	},
+	extensions = extensions,
 })

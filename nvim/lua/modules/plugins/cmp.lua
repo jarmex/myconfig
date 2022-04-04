@@ -140,9 +140,9 @@ cmp.setup({
 		border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
 	},
 	sources = {
-		{ name = "nvim_lsp" },
-		{ name = "cmp_tabnine" },
 		{ name = "luasnip" },
+		{ name = "cmp_tabnine" },
+		{ name = "nvim_lsp" },
 		{ name = "buffer", keyword_length = 5, max_item_count = 10 },
 		{ name = "path" },
 		{ name = "calc" },

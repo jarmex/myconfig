@@ -135,9 +135,6 @@ return packer.startup(function(use)
 		end,
 	})
 
-	-- TS Context comment string
-	use({ "JoosepAlviste/nvim-ts-context-commentstring", module = "ts_context_commentstring" })
-
 	--- Telescope
 	use({
 		"nvim-telescope/telescope.nvim",
@@ -150,7 +147,7 @@ return packer.startup(function(use)
 			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
 		},
 		config = function()
-			require("modules.plugins.telescope")
+			require("modules.plugins.telescope.init")
 		end,
 	})
 
@@ -180,11 +177,20 @@ return packer.startup(function(use)
 
 	-- Dev div tools
 	use({
-		--'editorconfig/editorconfig-vim',
-		"b3nj5m1n/kommentary",
-		--'junegunn/vim-easy-align',
-		-- 'tpope/vim-surround',
+		"numToStr/Comment.nvim",
+		config = function()
+			require("Comment").setup()
+		end,
 	})
+	-- use({
+	--'editorconfig/editorconfig-vim',
+	-- "b3nj5m1n/kommentary",
+	--'junegunn/vim-easy-align',
+	-- 'tpope/vim-surround',
+	-- })
+
+	-- TS Context comment string
+	-- use({ "JoosepAlviste/nvim-ts-context-commentstring", module = "ts_context_commentstring" })
 
 	use({
 		"folke/trouble.nvim",
@@ -234,12 +240,19 @@ return packer.startup(function(use)
 	-- use 'navarasu/onedark.nvim'
 	-- use 'folke/tokyonight.nvim'
 	use({
+		"catppuccin/nvim",
+		as = "catppuccin",
+		config = function()
+			require("modules.plugins.theme")
+		end,
+	})
+	use({
 		"rafamadriz/neon",
 		requires = {
 			"ryanoasis/vim-devicons",
 		},
 		config = function()
-			require("modules.plugins.colorscheme")
+			-- require("modules.plugins.neontheme")
 		end,
 	})
 
@@ -365,12 +378,13 @@ return packer.startup(function(use)
 			require("modules.plugins.notify")
 		end,
 	})
-	--[[ use ({
-    "RRethy/vim-illuminate",
-    config = function()
-      vim.g.Illuminate_highlightUnderCursor = 0
-    end
-  }) ]]
+
+	use({
+		"RRethy/vim-illuminate",
+		config = function()
+			vim.g.Illuminate_highlightUnderCursor = 0
+		end,
+	})
 
 	if packer_bootstrap then
 		require("packer").sync()

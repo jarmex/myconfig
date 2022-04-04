@@ -82,7 +82,7 @@ local function lsp_keymaps(bufnr)
 	u.buf_map("n", "<Leader>D", ":LspDiagLine<CR>", nil, bufnr)
 	u.buf_map("n", "<Leader>d", ":LspProblem<CR>", nil, bufnr)
 	u.buf_map("n", "<C-k>", ":LspSignatureHelp<CR>", nil, bufnr)
-	u.buf_map("n", "<Leader>q", ":LspDiagList<CR>", nil, bufnr)
+	u.buf_map("n", "]a", ":LspDiagList<CR>", nil, bufnr)
 	u.buf_map("n", "ga", ":LspCodeAction<CR>", nil, bufnr)
 	-- u.buf_map('i', '<C-x><C-x>', '<cmd>LspSignatureHelp<CR>', nil, bufnr)
 
@@ -130,7 +130,7 @@ function M.enable_format_on_save()
       autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()
     augroup end
   ]])
-	vim.notify("Enabled format on save")
+	-- vim.notify("Enabled format on save")
 end
 
 function M.disable_format_on_save()

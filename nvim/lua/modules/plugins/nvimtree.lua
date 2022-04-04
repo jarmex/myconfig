@@ -1,8 +1,8 @@
 local g = vim.g
 -- g.nvim_tree_ignore = { '.git', 'node_modules', '.cache' } -- empty by default
 -- g.nvim_tree_gitignore = 1 -- 0 by default
--- g.nvim_tree_highlight_opened_files = 1 -- 0 by default, will enable folder and file icon highlight for opened files/directories.
--- g.nvim_tree_git_hl = 1 -- 0 by default, will enable file highlight for git attributes (can be used without the icons).
+g.nvim_tree_highlight_opened_files = 1 -- 0 by default, will enable folder and file icon highlight for opened files/directories.
+g.nvim_tree_git_hl = 1 -- 0 by default, will enable file highlight for git attributes (can be used without the icons).
 
 g.nvim_tree_icons = {
 	default = "",

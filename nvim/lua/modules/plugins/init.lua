@@ -1,6 +1,5 @@
+_ = pcall(require, "packer_compiled")
 
-require('packer_compiled')
 vim.defer_fn(function()
-  require('modules.plugins.packer')
+	require("modules.plugins.packer")
 end, 0)
-
