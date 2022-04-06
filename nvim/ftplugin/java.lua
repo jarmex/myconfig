@@ -32,7 +32,7 @@ local config = {
 	-- The command that starts the language server
 	-- See: https://github.com/eclipse/eclipse.jdt.ls#running-from-the-command-line
 	cmd = {
-		"/Library/Java/JavaVirtualMachines/jdk-17.0.2.jdk/Contents/Home/bin/java",
+		"/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/bin/java",
 		"-Declipse.application=org.eclipse.jdt.ls.core.id1",
 		"-Dosgi.bundles.defaultStartLevel=4",
 		"-Declipse.product=org.eclipse.jdt.ls.core.product",
@@ -66,6 +66,7 @@ local config = {
 	-- for a list of options
 	settings = {
 		java = {
+			home = "/Library/Java/JavaVirtualMachines/adoptopenjdk-11.jdk/Contents/Home/bin/java",
 			eclipse = {
 				downloadSources = true,
 			},
