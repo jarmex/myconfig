@@ -82,6 +82,7 @@ local config = {
 			references = {
 				includeDecompiledSources = true,
 			},
+			format = { enabled = false },
 			signatureHelp = { enabled = true },
 			sources = {
 				organizeImports = {
