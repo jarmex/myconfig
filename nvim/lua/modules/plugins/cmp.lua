@@ -136,8 +136,11 @@ cmp.setup({
 		ghost_text = true,
 		native_menu = false,
 	},
-	documentation = {
-		border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+	view = {},
+	window = {
+		documentation = {
+			border = { "╭", "─", "╮", "│", "╯", "─", "╰", "│" },
+		},
 	},
 	sources = {
 		{ name = "luasnip" },

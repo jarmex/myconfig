@@ -96,7 +96,6 @@ return packer.startup(function(use)
 			require("modules.plugins.cmp")
 		end,
 		requires = {
-			"saadparwaiz1/cmp_luasnip",
 			"hrsh7th/cmp-nvim-lsp",
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
@@ -116,6 +115,7 @@ return packer.startup(function(use)
 	})
 	-- snippets
 	use("L3MON4D3/LuaSnip") --snippet engine
+	use({ "saadparwaiz1/cmp_luasnip" })
 	use("rafamadriz/friendly-snippets") -- a bunch of snippets to use
 
 	-- auto pairs
@@ -390,6 +390,13 @@ return packer.startup(function(use)
 		"akinsho/toggleterm.nvim",
 		config = function()
 			require("modules.plugins.terminal")
+		end,
+	})
+	use({
+		"michaelb/sniprun",
+		run = "bash ./install.sh",
+		config = function()
+			require("modules.plugins.sniprun")
 		end,
 	})
 

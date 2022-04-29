@@ -3,6 +3,13 @@ local g = vim.g
 -- g.nvim_tree_gitignore = 1 -- 0 by default
 g.nvim_tree_highlight_opened_files = 1 -- 0 by default, will enable folder and file icon highlight for opened files/directories.
 g.nvim_tree_git_hl = 1 -- 0 by default, will enable file highlight for git attributes (can be used without the icons).
+g.nvim_tree_show_icons = {
+	git = 1,
+	folders = 1,
+	files = 1,
+	folder_arrows = 1,
+	tree_width = 30,
+}
 
 g.nvim_tree_icons = {
 	default = "",
@@ -55,20 +62,18 @@ nvim_tree.setup({
 	-- will not open on setup if the filetype is in this list
 	ignore_ft_on_setup = { "startify", "dashboard", "alpha" },
 	-- closes neovim automatically when the tree is the last **WINDOW** in the view
-	auto_close = false,
+	-- auto_close = false,
 	-- opens the tree when changing/opening a new tab if the tree wasn't previously opened
 	open_on_tab = false,
 	-- hijack the cursor in the tree to put it at the start of the filename
 	hijack_cursor = true,
 	-- updates the root directory of the tree on `DirChanged` (when your run `:cd` usually)
 	update_cwd = false,
-	-- hijacks new directory buffers when they are opened.
-	update_to_buf_dir = {
-		-- enable the feature
-		enable = false,
-		-- allow to open the tree if it was previously closed
-		auto_open = true,
-	},
+
+	hijack_unnamed_buffer_when_opening = false,
+	ignore_buffer_on_setup = false,
+	open_on_setup_file = false,
+
 	-- show lsp diagnostics in the signcolumn
 	diagnostics = {
 		enable = true,
@@ -114,8 +119,7 @@ nvim_tree.setup({
 		height = 30,
 		-- side of the tree, can be one of 'left' | 'right' | 'top' | 'bottom'
 		side = "left",
-		-- if true the tree will resize itself after opening a file
-		auto_resize = true,
+		preserve_window_proportions = false,
 		hide_root_folder = false,
 		mappings = {
 			-- custom only false will merge the list with the default mappings
@@ -132,14 +136,8 @@ nvim_tree.setup({
 		relativenumber = false,
 		signcolumn = "yes",
 	},
-	show_icons = {
-		git = 1,
-		folders = 1,
-		files = 1,
-		folder_arrows = 1,
-		tree_width = 30,
-	},
 	actions = {
+		use_system_clipboard = true,
 		change_dir = {
 			enable = true,
 			global = false,

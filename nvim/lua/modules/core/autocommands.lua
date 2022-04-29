@@ -1,39 +1,67 @@
--- autocommands
-local exec = vim.api.nvim_exec
-
-local TrimWhitespace = exec(
-  [[
-  function! TrimWhitespace()
-    let l:save = winsaveview()
-    keeppatterns %s/\s\+$//e
-    call winrestview(l:save)
-  endfunction
-
-  call TrimWhitespace()
-  ]],
-  true
-)
-
--- don't auto commenting new lines
-exec([[au BufEnter * set fo-=c fo-=r fo-=o]], false)
-
--- disable IndentLine for markdown files (avoid concealing)
-exec([[au FileType markdown let g:indentLine_enabled=0]], false)
-
--- keep windows equally resized
-exec([[au VimResized * tabdo wincmd =]], false)
-
--- filetype
---exec([[au BufRead,BufNewFile *.sol set filetype=solidity]], false)
---exec([[au BufRead,BufNewFile *.twig set filetype=html.twig]], false)
-
--- git commit
-exec([[au BufNewFile,BufRead COMMIT_EDITMSG set spell nonumber wrap linebreak]], false)
-exec([[au filetype gitcommit let b:EditorConfig_disable=1]], false)
-
--- trim_white_space
--- exec([[au BufWritePre * call TrimWhitespace()]], false)
-
 --hrsh7th/nvim-cmp
 -- autocmd FileType sql,mysql,plsql lua require('cmp').setup.buffer({ sources = {{ name = 'vim-dadbod-completion' }} })
 
+vim.cmd([[
+  augroup _general_settings
+    autocmd!
+    autocmd FileType qf,help,man,lspinfo,spectre_panel nnoremap <silent> <buffer> q :close<CR> 
+    autocmd FileType qf set nobuflisted
+  augroup end
+  autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
+]])
+
+vim.api.nvim_create_autocmd({ "FileType" }, {
+	pattern = { "qf", "help", "man", "lspinfo", "spectre_panel" },
+	callback = function()
+		vim.cmd([[
+      nnoremap <silent> <buffer> q :close<CR> 
+      set nobuflisted 
+    ]])
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "User" }, {
+	pattern = { "AlphaReady" },
+	callback = function()
+		vim.cmd([[
+      set showtabline=0 | autocmd BufUnload <buffer> set showtabline=2
+    ]])
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "BufEnter" }, {
+	callback = function()
+		vim.cmd([[
+      if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
+    ]])
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "FileType" }, {
+	pattern = { "gitcommit", "markdown" },
+	callback = function()
+		vim.cmd([[
+    setlocal wrap
+    setlocal spell
+    ]])
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "VimResized" }, {
+	callback = function()
+		vim.cmd("tabdo wincmd =")
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "BufWritePost" }, {
+	pattern = { "*.java" },
+	callback = function()
+		vim.lsp.codelens.refresh()
+	end,
+})
+
+vim.api.nvim_create_autocmd({ "TextYankPost" }, {
+	callback = function()
+		vim.highlight.on_yank({ higroup = "Visual", timeout = 200 })
+	end,
+})
