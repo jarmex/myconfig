@@ -1,10 +1,10 @@
 --- https://github.com/nvim-treesitter/nvim-treesitter
-local status_ok, configs = pcall(require, "nvim-treesitter.configs")
+local status_ok, treesitter_config = pcall(require, "nvim-treesitter.configs")
 if not status_ok then
 	return
 end
 
-configs.setup({
+treesitter_config.setup({
 	ensure_installed = "all",
 	highlight = {
 		enable = true,

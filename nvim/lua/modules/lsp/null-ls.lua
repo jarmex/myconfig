@@ -14,12 +14,15 @@ local sources = {
 	b.diagnostics.eslint_d,
 	b.formatting.stylua,
 	b.formatting.rustfmt,
-	b.diagnostics.yamllint,
 	b.formatting.google_java_format,
+	b.formatting.black.with({ extra_args = { "--fast" } }),
+	b.diagnostics.yamllint,
+	b.diagnostics.hadolint, -- dockerfile
 }
 
 null_ls.setup({
 	debug = false,
 	-- on_attach = on_attach,
 	sources = sources,
+	on_attach = require("modules.lsp.handlers").on_attach,
 })

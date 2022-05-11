@@ -46,18 +46,18 @@ M.setup = function()
 end
 
 local function lsp_highlight_document(client)
-	if client.resolved_capabilities.document_highlight then
-		local status_ok, illuminate = pcall(require, "illuminate")
-		if not status_ok then
-			return
-		end
-		illuminate.on_attach(client)
+	-- if client.resolved_capabilities.document_highlight then
+	local status_ok, illuminate = pcall(require, "illuminate")
+	if not status_ok then
+		return
 	end
+	illuminate.on_attach(client)
+	--end
 end
 
 local function lsp_keymaps(bufnr)
 	-- commands
-	u.lua_command("LspFormatting", "vim.lsp.buf.formatting()")
+	-- u.lua_command("LspFormatting", "vim.lsp.buf.format({async = true})")
 	u.lua_command("LspHover", "vim.lsp.buf.hover()")
 	u.lua_command("LspRename", "vim.lsp.buf.rename()")
 	u.lua_command("LspDiagPrev", "vim.diagnostic.goto_prev({ popup_opts = popup_opts })")
@@ -95,32 +95,40 @@ local function lsp_keymaps(bufnr)
 	u.buf_map("n", "<Leader>ff", ":LspFormatting<CR>", nil, bufnr)
 end
 
+local lsp_formatting = function(bufnr)
+	vim.lsp.buf.format({
+		filter = function(clients)
+			-- filter out clients that you don't want to use
+			return vim.tbl_filter(function(client)
+				-- return client.name ~= "tsserver"
+				if client.name == "tsserver" then
+					return client.name ~= "tsserver"
+				end
+				if client.name == "jdt.ls" then
+					return client.name ~= "jdt.ls"
+				end
+				return client.name ~= "sumneko_lua"
+			end, clients)
+		end,
+		bufnr = bufnr,
+	})
+end
+
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
+
 M.on_attach = function(client, bufnr)
-	-- vim.notify(client.name .. " starting...")
-	if client.name == "html" then
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
-	end
-
-	if client.name == "jsonls" then
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
-	end
-
-	if client.name == "rust_analyzer" then
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
-	end
-
-	if client.name == "tsserver" then
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
-		require("modules.lsp.settings.tsserver").on_attach(client, bufnr)
+	if client.supports_method("textDocument/formatting") then
+		vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			group = augroup,
+			buffer = bufnr,
+			callback = function()
+				lsp_formatting(bufnr)
+			end,
+		})
 	end
 
 	if client.name == "jdt.ls" then
-		client.resolved_capabilities.document_formatting = false
-		client.resolved_capabilities.document_range_formatting = false
 		require("jdtls").setup_dap({ hotcodereplace = "auto" })
 		require("jdtls.dap").setup_dap_main_class_configs()
 	end
@@ -133,7 +141,7 @@ function M.enable_format_on_save()
 	vim.cmd([[
     augroup format_on_save
       autocmd! 
-      autocmd BufWritePre * lua vim.lsp.buf.formatting_sync()
+      autocmd BufWritePre * lua vim.lsp.buf.format()
     augroup end
   ]])
 	-- vim.notify("Enabled format on save")
