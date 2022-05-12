@@ -3,7 +3,17 @@ if not status_ok then
 	return
 end
 
-lsp_installer.setup({})
+lsp_installer.setup({
+	ensure_installed = { "rust_analyzer", "sumneko_lua", "tsserver", "gopls" }, -- ensure these servers are always installed
+	automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
+	ui = {
+		icons = {
+			server_installed = "✓",
+			server_pending = "➜",
+			server_uninstalled = "✗",
+		},
+	},
+})
 require("modules.lsp.rusttools")
 require("modules.lsp.settings.jsonls")
 require("modules.lsp.settings.yamlls")
