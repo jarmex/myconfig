@@ -1,30 +1,7 @@
-local actions = require("telescope.actions")
 local action_state = require("telescope.actions.state")
 local themes = require("telescope.themes")
 
 local M = {}
-
--- Dropdown list theme using a builtin theme definitions :
-local center_list = require("telescope.themes").get_dropdown({
-	winblend = 10,
-	width = 0.5,
-	prompt = " ",
-	results_height = 15,
-	previewer = false,
-})
-
--- Settings for with preview option
-local with_preview = {
-	--  winblend = 10,
-	show_line = false,
-	results_title = false,
-	preview_title = false,
-	layout_config = {
-		horizontal = {
-			width = 0.8,
-		},
-	},
-}
 
 function M.project_files()
 	local opts = {} -- with_preview

@@ -8,6 +8,8 @@ if not telescope_ok then
 	return
 end
 
+local fb_actions = require("telescope").extensions.file_browser.actions
+
 telescope.setup({
 	extensions = {
 		file_browser = {
@@ -15,6 +17,11 @@ telescope.setup({
 			path = "%:p:h",
 			cwd_to_path = true,
 			path_display = { truncate = 3 },
+			mappings = {
+				["n"] = {
+					["<C-a>"] = fb_actions.create,
+				},
+			},
 		},
 		fzf = {
 			fuzzy = true,

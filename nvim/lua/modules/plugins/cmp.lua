@@ -144,11 +144,13 @@ cmp.setup({
 	},
 	sources = {
 		{ name = "luasnip" },
+		{ name = "nvim_lsp_signature_help" },
 		{ name = "cmp_tabnine" },
 		{ name = "nvim_lsp" },
 		{ name = "buffer", keyword_length = 5, max_item_count = 10 },
 		{ name = "path" },
+		{ name = "crates" },
 		{ name = "calc" },
-		--{ name = 'nvim_lua' },
+		{ name = "nvim_lua" },
 	},
 })

@@ -3,6 +3,7 @@ if not catppuccin_ok then
 	return
 end
 
+-- catppuccin config
 local config = {
 	transparent_background = true,
 	term_colors = true,
@@ -49,7 +50,7 @@ local config = {
 		which_key = false,
 		indent_blankline = {
 			enabled = true,
-			colored_indent_levels = false,
+			colored_indent_levels = true,
 		},
 		dashboard = true,
 		neogit = false,
@@ -62,8 +63,8 @@ local config = {
 		ts_rainbow = false,
 		hop = false,
 		notify = true,
-		telekasten = true,
-		symbols_outline = true,
+		telekasten = false,
+		symbols_outline = false,
 	},
 }
 

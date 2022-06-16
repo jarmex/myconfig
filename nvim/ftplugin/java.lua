@@ -10,7 +10,7 @@ local home = os.getenv("HOME")
 local workspace_dir = "/Users/jamo/Projects/eclipse/" .. project_name
 
 -- Find root of project
-local root_markers = { ".git", "mvnw", "gradlew", "pom.xml", "build.gradle" }
+local root_markers = { ".git", "mvnw", "gradlew", "build.gradle" }
 local root_dir = require("jdtls.setup").find_root(root_markers)
 if root_dir == "" then
 	return
@@ -38,8 +38,8 @@ local config = {
 		"-Declipse.product=org.eclipse.jdt.ls.core.product",
 		"-Dlog.protocol=true",
 		"-Dlog.level=ALL",
-		"-Xms1g",
-		"-Xmx2G",
+		"-Xms2G",
+		"-Xmx3G",
 		"-javaagent:/Users/jamo/Projects/java_lib/lombok.jar",
 		"--add-modules=ALL-SYSTEM",
 		"--add-opens",
@@ -54,8 +54,13 @@ local config = {
 		workspace_dir,
 	},
 
-	on_attach = require("modules.lsp.handlers").on_attach,
-	capabilities = require("modules.lsp.handlers").capabilities,
+	on_attach = function(client, bufnr)
+		require("modules.lsp.handlers").on_attach(client, bufnr)
+		jdtls.setup_dap({ hotcodereplace = "auto" })
+		jdtls.setup.add_commands()
+		require("jdtls.dap").setup_dap_main_class_configs()
+	end,
+	capabilities = require("modules.lsp.handlers").common_capabilities(),
 	-- 💀
 	-- This is the default if not provided, you can remove it. Or adjust as needed.
 	-- One dedicated LSP server & client will be started per unique root_dir
@@ -152,7 +157,7 @@ local config = {
 }
 -- This starts a new client & server,
 -- or attaches to an existing client & server depending on the `root_dir`.
-require("jdtls").start_or_attach(config)
+jdtls.start_or_attach(config)
 
 vim.cmd(
 	"command! -buffer -nargs=? -complete=custom,v:lua.require'jdtls'._complete_compile JdtCompile lua require('jdtls').compile(<f-args>)"

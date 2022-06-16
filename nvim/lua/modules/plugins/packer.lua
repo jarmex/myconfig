@@ -73,19 +73,11 @@ return packer.startup(function(use)
 	use({ "b0o/SchemaStore.nvim" })
 
 	use({
-		"filipdutescu/renamer.nvim",
-		config = function()
-			require("modules.plugins.renamer")
-		end,
-	})
-
-	use({
 		"SmiteshP/nvim-gps",
 		requires = "nvim-treesitter/nvim-treesitter",
 		wants = "nvim-treesitter",
-		module = "nvim-gps",
 		config = function()
-			require("nvim-gps").setup({ separator = " " })
+			require("modules.plugins.nvimgps")
 		end,
 	})
 
@@ -102,6 +94,7 @@ return packer.startup(function(use)
 			"hrsh7th/cmp-nvim-lua",
 			"onsails/lspkind-nvim",
 			"rafamadriz/friendly-snippets",
+			"hrsh7th/cmp-nvim-lsp-signature-help",
 			"hrsh7th/cmp-calc",
 			{
 				"tzachar/cmp-tabnine",
@@ -182,15 +175,6 @@ return packer.startup(function(use)
 			require("Comment").setup()
 		end,
 	})
-	-- use({
-	--'editorconfig/editorconfig-vim',
-	-- "b3nj5m1n/kommentary",
-	--'junegunn/vim-easy-align',
-	-- 'tpope/vim-surround',
-	-- })
-
-	-- TS Context comment string
-	-- use({ "JoosepAlviste/nvim-ts-context-commentstring", module = "ts_context_commentstring" })
 
 	use({
 		"folke/trouble.nvim",
@@ -199,14 +183,6 @@ return packer.startup(function(use)
 			require("modules.plugins.trouble")
 		end,
 	})
-
-	--[[ use({
-    'kkoomen/vim-doge',
-    run = ':call doge#install()',
-    config = function()
-      require('modules.plugins.doge')
-    end
-  }) ]]
 
 	-- Git
 	use("tpope/vim-fugitive")
@@ -246,15 +222,16 @@ return packer.startup(function(use)
 			require("modules.plugins.theme")
 		end,
 	})
-	use({
-		"rafamadriz/neon",
-		requires = {
-			"ryanoasis/vim-devicons",
-		},
-		config = function()
-			-- require("modules.plugins.neontheme")
-		end,
-	})
+
+	-- use({
+	-- 	"rafamadriz/neon",
+	-- 	requires = {
+	-- 		"ryanoasis/vim-devicons",
+	-- 	},
+	-- 	config = function()
+	-- 		-- require("modules.plugins.neontheme")
+	-- 	end,
+	-- })
 
 	use({
 		"norcalli/nvim-colorizer.lua",
@@ -298,13 +275,13 @@ return packer.startup(function(use)
 		end,
 	})
 
-	use({
-		"simrat39/symbols-outline.nvim",
-		cmd = { "SymbolsOutline" },
-		config = function()
-			require("modules.plugins.symbol-outline")
-		end,
-	})
+	-- use({
+	-- 	"simrat39/symbols-outline.nvim",
+	-- 	cmd = { "SymbolsOutline" },
+	-- 	config = function()
+	-- 		require("modules.plugins.symbol-outline")
+	-- 	end,
+	-- })
 
 	-- Start Screen
 	use({ "mhinz/vim-startify" })
@@ -346,16 +323,16 @@ return packer.startup(function(use)
 		end,
 	})
 	-- refactoring
-	use({
-		"ThePrimeagen/refactoring.nvim",
-		requires = {
-			{ "nvim-lua/plenary.nvim" },
-			{ "nvim-treesitter/nvim-treesitter" },
-		},
-		config = function()
-			require("modules.plugins.refactoring")
-		end,
-	})
+	-- use({
+	-- 	"ThePrimeagen/refactoring.nvim",
+	-- 	requires = {
+	-- 		{ "nvim-lua/plenary.nvim" },
+	-- 		{ "nvim-treesitter/nvim-treesitter" },
+	-- 	},
+	-- 	config = function()
+	-- 		require("modules.plugins.refactoring")
+	-- 	end,
+	-- })
 
 	-- adding JAVA plugins
 	use({
@@ -368,9 +345,9 @@ return packer.startup(function(use)
 			require("modules.plugins.numb")
 		end,
 	})
-	use({
-		"antoinemadec/FixCursorHold.nvim", -- This is needed to fix lsp doc highlight
-	})
+	-- use({
+	-- 	"antoinemadec/FixCursorHold.nvim", -- This is needed to fix lsp doc highlight
+	-- })
 
 	use({
 		"rcarriga/nvim-notify",
@@ -394,18 +371,33 @@ return packer.startup(function(use)
 	})
 
 	use({
+		"filipdutescu/renamer.nvim",
+		config = function()
+			require("modules.plugins.renamer")
+		end,
+	})
+
+	use({
 		"karb94/neoscroll.nvim",
 		config = function()
 			require("neoscroll").setup()
 		end,
 	})
 	use({
-		"michaelb/sniprun",
-		run = "bash ./install.sh",
+		"saecki/crates.nvim",
+		event = { "BufRead Cargo.toml" },
+		requires = { { "nvim-lua/plenary.nvim" } },
 		config = function()
-			require("modules.plugins.sniprun")
+			require("crates").setup()
 		end,
 	})
+	-- use({
+	-- 	"michaelb/sniprun",
+	-- 	run = "bash ./install.sh",
+	-- 	config = function()
+	-- 		require("modules.plugins.sniprun")
+	-- 	end,
+	-- })
 
 	if packer_bootstrap then
 		require("packer").sync()

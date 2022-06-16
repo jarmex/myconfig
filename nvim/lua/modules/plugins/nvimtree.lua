@@ -1,45 +1,38 @@
 local g = vim.g
 -- g.nvim_tree_ignore = { '.git', 'node_modules', '.cache' } -- empty by default
 -- g.nvim_tree_gitignore = 1 -- 0 by default
-g.nvim_tree_highlight_opened_files = 1 -- 0 by default, will enable folder and file icon highlight for opened files/directories.
-g.nvim_tree_git_hl = 1 -- 0 by default, will enable file highlight for git attributes (can be used without the icons).
-g.nvim_tree_show_icons = {
-	git = 1,
-	folders = 1,
-	files = 1,
-	folder_arrows = 1,
-	tree_width = 30,
-}
+-- g.nvim_tree_highlight_opened_files = 1 -- 0 by default, will enable folder and file icon highlight for opened files/directories.
+-- g.nvim_tree_git_hl = 1 -- 0 by default, will enable file highlight for git attributes (can be used without the icons).
 
-g.nvim_tree_icons = {
-	default = "",
-	symlink = "",
-	git = {
-		unstaged = "✗",
-		staged = "✓",
-		unmerged = "",
-		renamed = "➜",
-		untracked = "★",
-		deleted = "",
-		ignored = "◌",
-	},
-	folder = {
-		arrow_open = "▾",
-		arrow_closed = "▸",
-		default = "",
-		open = "",
-		empty = "",
-		empty_open = "",
-		symlink = "",
-		symlink_open = "",
-	},
-	lsp = {
-		hint = "",
-		info = "",
-		warning = "",
-		error = "",
-	},
-}
+-- g.nvim_tree_icons = {
+-- 	default = "",
+-- 	symlink = "",
+-- 	git = {
+-- 		unstaged = "✗",
+-- 		staged = "✓",
+-- 		unmerged = "",
+-- 		renamed = "➜",
+-- 		untracked = "★",
+-- 		deleted = "",
+-- 		ignored = "◌",
+-- 	},
+-- 	folder = {
+-- 		arrow_open = "▾",
+-- 		arrow_closed = "▸",
+-- 		default = "",
+-- 		open = "",
+-- 		empty = "",
+-- 		empty_open = "",
+-- 		symlink = "",
+-- 		symlink_open = "",
+-- 	},
+-- 	lsp = {
+-- 		hint = "",
+-- 		info = "",
+-- 		warning = "",
+-- 		error = "",
+-- 	},
+-- }
 local status_ok, nvim_tree = pcall(require, "nvim-tree")
 if not status_ok then
 	return
@@ -135,6 +128,57 @@ nvim_tree.setup({
 		number = false,
 		relativenumber = false,
 		signcolumn = "yes",
+	},
+	renderer = {
+		add_trailing = false,
+		group_empty = false,
+		highlight_git = false,
+		highlight_opened_files = "none",
+		root_folder_modifier = ":~",
+		indent_markers = {
+			enable = false,
+			icons = {
+				corner = "└ ",
+				edge = "│ ",
+				none = "  ",
+			},
+		},
+		icons = {
+			webdev_colors = true,
+			git_placement = "before",
+			padding = " ",
+			symlink_arrow = " ➛ ",
+			show = {
+				file = true,
+				folder = true,
+				folder_arrow = true,
+				git = true,
+			},
+			glyphs = {
+				default = "",
+				symlink = "",
+				folder = {
+					arrow_closed = "▸",
+					arrow_open = "▾",
+					default = "",
+					open = "",
+					empty = "",
+					empty_open = "",
+					symlink = "",
+					symlink_open = "",
+				},
+				git = {
+					unstaged = "✗",
+					staged = "✓",
+					unmerged = "",
+					renamed = "➜",
+					untracked = "★",
+					deleted = "",
+					ignored = "◌",
+				},
+			},
+		},
+		special_files = { "Cargo.toml", "Makefile", "README.md", "readme.md" },
 	},
 	actions = {
 		use_system_clipboard = true,

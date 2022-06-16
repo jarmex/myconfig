@@ -9,6 +9,8 @@ lspconfig.gopls.setup({
 	cmd = { "gopls", "serve" },
 	filetypes = { "go", "gomod" },
 	root_dir = util.root_pattern("go.work", "go.mod", ".git"),
+	on_attach = require("modules.lsp.handlers").on_attach,
+	capabilities = require("modules.lsp.handlers").common_capabilities(),
 	settings = {
 		gopls = {
 			analyses = {

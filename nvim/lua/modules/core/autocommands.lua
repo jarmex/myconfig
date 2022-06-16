@@ -29,13 +29,7 @@ vim.api.nvim_create_autocmd({ "User" }, {
 	end,
 })
 
-vim.api.nvim_create_autocmd({ "BufEnter" }, {
-	callback = function()
-		vim.cmd([[
-      if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif
-    ]])
-	end,
-})
+-- vim.cmd("autocmd BufEnter * ++nested if winnr('$') == 1 && bufname() == 'NvimTree_' . tabpagenr() | quit | endif")
 
 vim.api.nvim_create_autocmd({ "FileType" }, {
 	pattern = { "gitcommit", "markdown" },
@@ -65,3 +59,34 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 		vim.highlight.on_yank({ higroup = "Visual", timeout = 200 })
 	end,
 })
+-- vim.api.nvim_create_autocmd({ "CursorMoved", "BufWinEnter", "BufFilePost" }, {
+-- 	callback = function()
+-- 		local winbar_filetype_exclude = {
+-- 			"help",
+-- 			"startify",
+-- 			"dashboard",
+-- 			"packer",
+-- 			"neogitstatus",
+-- 			"NvimTree",
+-- 			"Trouble",
+-- 			"alpha",
+-- 			"lir",
+-- 			"Outline",
+-- 			"spectre_panel",
+-- 			"toggleterm",
+-- 		}
+--
+-- 		if vim.tbl_contains(winbar_filetype_exclude, vim.bo.filetype) then
+-- 			vim.opt_local.winbar = nil
+-- 			return
+-- 		end
+--
+-- 		local value = require("modules.core.winbar").gps()
+--
+-- 		if value == nil then
+-- 			value = require("modules.core.winbar").filename()
+-- 		end
+--
+-- 		vim.opt_local.winbar = value
+-- 	end,
+-- })

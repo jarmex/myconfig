@@ -57,7 +57,7 @@ end
 
 local function lsp_keymaps(bufnr)
 	-- commands
-	-- u.lua_command("LspFormatting", "vim.lsp.buf.format({async = true})")
+	u.lua_command("LspFormatting", "vim.lsp.buf.formatting_sync()")
 	u.lua_command("LspHover", "vim.lsp.buf.hover()")
 	u.lua_command("LspRename", "vim.lsp.buf.rename()")
 	u.lua_command("LspDiagPrev", "vim.diagnostic.goto_prev({ popup_opts = popup_opts })")
@@ -69,10 +69,11 @@ local function lsp_keymaps(bufnr)
 	u.lua_command("LspDeclaration", "vim.lsp.buf.declaration()")
 	u.lua_command("LspImplementation", "vim.lsp.buf.implementation()")
 	u.lua_command("LspDiagList", "vim.diagnostic.setloclist()")
+	u.lua_command("LspQuickFixList", "vim.diagnostic.setqflist()")
 	u.lua_command("LspCodeAction", "vim.lsp.buf.code_action()")
 
 	-- bindings
-	-- u.buf_map('n', '<Leader>R', ':LspRename<CR>', nil, bufnr)
+	u.buf_map("n", "<Leader>cr", ":LspRename<CR>", nil, bufnr)
 	u.buf_map("n", "gy", ":LspTypeDef<CR>", nil, bufnr)
 	u.buf_map("n", "K", ":LspHover<CR>", nil, bufnr)
 	u.buf_map("n", "]a", ":LspDiagList<CR>", nil, bufnr)
@@ -84,6 +85,7 @@ local function lsp_keymaps(bufnr)
 	u.buf_map("n", "<Leader>d", ":LspProblem<CR>", nil, bufnr)
 	u.buf_map("n", "<Leader>k", ":LspSignatureHelp<CR>", nil, bufnr)
 	u.buf_map("n", "ga", ":LspCodeAction<CR>", nil, bufnr)
+	u.buf_map("n", "<Leader>qf", ":LspQuickFixList<CR>", nil, bufnr)
 	-- u.buf_map('i', '<C-x><C-x>', '<cmd>LspSignatureHelp<CR>', nil, bufnr)
 
 	-- telescope
@@ -128,10 +130,9 @@ M.on_attach = function(client, bufnr)
 		})
 	end
 
-	if client.name == "jdt.ls" then
-		require("jdtls").setup_dap({ hotcodereplace = "auto" })
-		require("jdtls.dap").setup_dap_main_class_configs()
-	end
+	vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
+	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
+	vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
 
 	lsp_keymaps(bufnr)
 	lsp_highlight_document(client)
