@@ -97,35 +97,12 @@ local function lsp_keymaps(bufnr)
 	u.buf_map("n", "<Leader>ff", ":LspFormatting<CR>", nil, bufnr)
 end
 
-local lsp_formatting = function(bufnr)
-	vim.lsp.buf.format({
-		filter = function(clients)
-			-- filter out clients that you don't want to use
-			return vim.tbl_filter(function(client)
-				-- return client.name ~= "tsserver"
-				if client.name == "tsserver" then
-					return client.name ~= "tsserver"
-				end
-				if client.name == "jdt.ls" then
-					return client.name ~= "jdt.ls"
-				end
-				return client.name ~= "sumneko_lua"
-			end, clients)
-		end,
-		bufnr = bufnr,
-	})
-end
-
-local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
-
 M.on_attach = function(client, bufnr)
 	if client.supports_method("textDocument/formatting") then
-		vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = augroup,
-			buffer = bufnr,
-			callback = function()
-				lsp_formatting(bufnr)
+		vim.lsp.buf.format({
+			bufnr = bufnr,
+			filter = function(clientd)
+				return clientd.name == "null-ls"
 			end,
 		})
 	end

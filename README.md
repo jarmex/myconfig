@@ -14,3 +14,4 @@ Steps:
 * Install the package manager ([packer.nvim](https://github.com/wbthomason/packer.nvim))
 * Download the code (nvim) and `cd` to the nvim
 * Run PackerSync to download all the plugin and compile
+* Support neovim 0.8+ configuration
