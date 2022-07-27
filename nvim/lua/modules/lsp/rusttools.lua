@@ -11,6 +11,7 @@ local opts = {
 	tools = { -- rust-tools options
 		autoSetHints = true,
 		hover_with_actions = true,
+		executor = require("rust-tools/executors").termopen,
 		inlay_hints = {
 			show_parameter_hints = false,
 			parameter_hints_prefix = "",
@@ -19,6 +20,24 @@ local opts = {
 	},
 	dap = {
 		adapter = require("rust-tools.dap").get_codelldb_adapter(codelldb_path, liblldb_path),
+	},
+	-- options same as lsp hover / vim.lsp.util.open_floating_preview()
+	hover_actions = {
+		-- the border that is used for the hover window
+		-- see vim.api.nvim_open_win()
+		border = {
+			{ "╭", "FloatBorder" },
+			{ "─", "FloatBorder" },
+			{ "╮", "FloatBorder" },
+			{ "│", "FloatBorder" },
+			{ "╯", "FloatBorder" },
+			{ "─", "FloatBorder" },
+			{ "╰", "FloatBorder" },
+			{ "│", "FloatBorder" },
+		},
+		-- whether the hover action window gets automatically focused
+		-- default: false
+		auto_focus = false,
 	},
 
 	-- all the opts to send to nvim-lspconfig

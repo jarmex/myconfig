@@ -70,6 +70,7 @@ nvim_tree.setup({
 	-- show lsp diagnostics in the signcolumn
 	diagnostics = {
 		enable = true,
+		show_on_dirs = true,
 		icons = {
 			hint = "",
 			info = "",
@@ -78,8 +79,8 @@ nvim_tree.setup({
 		},
 	},
 	filters = {
-		dotfiles = false,
-		custom = { ".git", "node_modules", ".cache" },
+		dotfiles = true,
+		custom = { "^.git$", "node_modules", "^.cache$" },
 	},
 	-- update the focused file on `BufEnter`, un-collapses the folders recursively until it finds the file
 	update_focused_file = {
@@ -87,14 +88,14 @@ nvim_tree.setup({
 		enable = true,
 		-- update the root directory of the tree to the one of the folder containing the file if the file is not under the current root directory
 		-- only relevant when `update_focused_file.enable` is true
-		update_cwd = false,
+		update_root = false,
 		-- list of buffer names / filetypes that will not update the cwd if the file isn't found under the current root directory
 		-- only relevant when `update_focused_file.update_cwd` is true and `update_focused_file.enable` is true
 		ignore_list = {},
 	},
 	git = {
 		enable = true,
-		ignore = false,
+		ignore = true,
 		timeout = 500,
 	},
 	-- configuration options for the system open command (`s` in the tree by default)
@@ -127,12 +128,13 @@ nvim_tree.setup({
 		},
 		number = false,
 		relativenumber = false,
-		signcolumn = "yes",
+		signcolumn = "no",
+		adaptive_size = true,
 	},
 	renderer = {
 		add_trailing = false,
 		group_empty = false,
-		highlight_git = false,
+		highlight_git = true,
 		highlight_opened_files = "none",
 		root_folder_modifier = ":~",
 		indent_markers = {
@@ -198,6 +200,9 @@ nvim_tree.setup({
 				},
 			},
 		},
+	},
+	filesystem_watchers = {
+		enable = true,
 	},
 })
 

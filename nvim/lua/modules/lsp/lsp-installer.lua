@@ -1,4 +1,19 @@
-local status_ok, lsp_installer = pcall(require, "nvim-lsp-installer")
+local mason_ok, mason = pcall(require, "mason")
+if not mason_ok then
+	return
+end
+
+mason.setup({
+	ui = {
+		icons = {
+			package_installed = "✓",
+			package_pending = "➜",
+			package_uninstalled = "✗",
+		},
+	},
+})
+
+local status_ok, lsp_installer = pcall(require, "mason-lspconfig")
 if not status_ok then
 	return
 end
@@ -6,13 +21,6 @@ end
 lsp_installer.setup({
 	ensure_installed = { "rust_analyzer", "sumneko_lua", "tsserver", "gopls" }, -- ensure these servers are always installed
 	automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
-	ui = {
-		icons = {
-			server_installed = "✓",
-			server_pending = "➜",
-			server_uninstalled = "✗",
-		},
-	},
 })
 require("modules.lsp.rusttools")
 require("modules.lsp.settings.jsonls")

@@ -12,18 +12,20 @@ end
 
 local sources = {
 	-- code action
-	b.code_actions.eslint_d,
-	-- diagnostics
-	b.diagnostics.yamllint.with({ extra_filetypes = { "yml" } }), -- add support for yml extensions
-	b.diagnostics.hadolint, -- dockerfile
-	b.diagnostics.eslint.with({
+	--b.code_actions.eslint_d,
+	b.code_actions.eslint.with({
+		prefer_local = "node_modules/.bin",
 		condition = function(utils)
 			return preferedEslint(utils)
 		end,
 	}),
-	b.diagnostics.eslint_d.with({
+	-- diagnostics
+	b.diagnostics.yamllint.with({ extra_filetypes = { "yml" } }), -- add support for yml extensions
+	b.diagnostics.hadolint, -- dockerfile
+	b.diagnostics.eslint.with({
+		prefer_local = "node_modules/.bin",
 		condition = function(utils)
-			return not preferedEslint(utils)
+			return preferedEslint(utils)
 		end,
 	}),
 	b.diagnostics.tidy, -- xml
@@ -31,12 +33,13 @@ local sources = {
 	-- formatting
 	b.formatting.tidy,
 	b.formatting.prettierd.with({
-		extra_filetypes = { "yml" },
+		extra_filetypes = { "yml", "toml", "solidity" },
+		extra_args = { "--single-quote", "--jsx-single-quote", "--print-width 100" },
 	}),
 	b.formatting.stylua,
-	b.formatting.rustfmt,
-	b.formatting.google_java_format,
-	b.formatting.black.with({ extra_args = { "--fast" } }),
+	b.formatting.rustfmt, -- rust
+	b.formatting.google_java_format, --java
+	b.formatting.black.with({ extra_args = { "--fast" } }), --python
 	--b.formatting.jq, --json
 }
 

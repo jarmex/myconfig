@@ -31,6 +31,7 @@ end
 
 packer.init({
 	compile_path = vim.fn.stdpath("config") .. "/lua/packer_compiled.lua",
+	auto_reload_compiled = true,
 	display = {
 		working_sym = "🛠️ ", -- The symbol for a plugin being installed/updated
 		error_sym = "🧨", -- The symbol for a plugin with an error in installation/updating
@@ -58,9 +59,13 @@ return packer.startup(function(use)
 
 	--- Lsp
 	use({
+		"williamboman/mason.nvim",
+		"williamboman/mason-lspconfig.nvim",
+	})
+
+	use({
 		"neovim/nvim-lspconfig",
 		requires = {
-			"williamboman/nvim-lsp-installer",
 			"ray-x/lsp_signature.nvim",
 			"jose-elias-alvarez/nvim-lsp-ts-utils",
 			"jose-elias-alvarez/null-ls.nvim",
@@ -218,6 +223,7 @@ return packer.startup(function(use)
 	use({
 		"catppuccin/nvim",
 		as = "catppuccin",
+		run = "CatppuccinCompile",
 		config = function()
 			require("modules.plugins.theme")
 		end,
@@ -389,6 +395,13 @@ return packer.startup(function(use)
 		requires = { { "nvim-lua/plenary.nvim" } },
 		config = function()
 			require("crates").setup()
+		end,
+	})
+	use({
+		"phaazon/hop.nvim",
+		branch = "v2", -- optional but strongly recommended
+		config = function()
+			require("modules.plugins.hop")
 		end,
 	})
 	-- use({
