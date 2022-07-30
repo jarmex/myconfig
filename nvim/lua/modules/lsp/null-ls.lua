@@ -29,7 +29,7 @@ local sources = {
 		end,
 	}),
 	b.diagnostics.tidy, -- xml
-	--
+	b.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
 	-- formatting
 	b.formatting.tidy,
 	b.formatting.prettierd.with({
@@ -40,6 +40,7 @@ local sources = {
 	b.formatting.rustfmt, -- rust
 	b.formatting.google_java_format, --java
 	b.formatting.black.with({ extra_args = { "--fast" } }), --python
+	b.formatting.sql_formatter,
 	--b.formatting.jq, --json
 }
 
