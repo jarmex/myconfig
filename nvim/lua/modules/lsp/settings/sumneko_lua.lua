@@ -8,6 +8,7 @@ lspconfig.sumneko_lua.setup({
 	capabilities = require("modules.lsp.handlers").common_capabilities(),
 	settings = {
 		Lua = {
+			completion = { enable = true, showWord = "Disable" },
 			diagnostics = {
 				globals = { "vim" },
 			},

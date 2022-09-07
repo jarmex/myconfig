@@ -223,7 +223,6 @@ return packer.startup(function(use)
 	use({
 		"catppuccin/nvim",
 		as = "catppuccin",
-		run = "CatppuccinCompile",
 		config = function()
 			require("modules.plugins.theme")
 		end,
@@ -403,6 +402,11 @@ return packer.startup(function(use)
 		config = function()
 			require("modules.plugins.hop")
 		end,
+	})
+
+	use({
+		"sindrets/diffview.nvim",
+		requires = "nvim-lua/plenary.nvim",
 	})
 	-- use({
 	-- 	"michaelb/sniprun",

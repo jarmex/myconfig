@@ -10,7 +10,7 @@ local liblldb_path = extension_path .. "lldb/lib/liblldb.so"
 local opts = {
 	tools = { -- rust-tools options
 		autoSetHints = true,
-		hover_with_actions = true,
+		-- hover_with_actions = true,
 		executor = require("rust-tools/executors").termopen,
 		inlay_hints = {
 			show_parameter_hints = false,
@@ -53,9 +53,11 @@ local opts = {
 			["rust-analyzer"] = {
 				-- enable clippy on save
 				checkOnSave = {
+					allFeatures = true,
 					command = "clippy",
 				},
 				cargo = {
+					allFeatures = true,
 					autoReload = true,
 				},
 			},

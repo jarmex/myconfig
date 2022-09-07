@@ -90,7 +90,6 @@ local config = {
 		mini = false,
 	},
 }
-
 catppuccin.setup(config)
 -- load the color scheme
 vim.cmd([[colorscheme catppuccin]])

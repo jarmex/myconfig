@@ -42,6 +42,8 @@ local sources = {
 	b.formatting.black.with({ extra_args = { "--fast" } }), --python
 	b.formatting.sql_formatter,
 	--b.formatting.jq, --json
+	--django html
+	b.formatting.djlint,
 }
 
 null_ls.setup({
