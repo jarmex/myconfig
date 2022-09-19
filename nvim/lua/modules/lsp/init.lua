@@ -1,5 +1,4 @@
 require("modules.lsp.lsp-installer")
 require("modules.lsp.lsp-signature")
 require("modules.lsp.handlers").setup()
-require("modules.lsp.handlers").toggle_format_on_save()
 require("modules.lsp.null-ls")

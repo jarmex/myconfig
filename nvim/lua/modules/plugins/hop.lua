@@ -9,7 +9,7 @@ hop.setup({ keys = "etovxqpdygfblzhckisuran" })
 
 u.nmap(
 	"<Leader>f",
-	"<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true })<cr>"
+	"<cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = false })<cr>"
 )
 u.nmap(
 	"<Leader>F",

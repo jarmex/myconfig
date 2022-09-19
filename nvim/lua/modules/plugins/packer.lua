@@ -100,6 +100,7 @@ return packer.startup(function(use)
 			"onsails/lspkind-nvim",
 			"rafamadriz/friendly-snippets",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
+			"hrsh7th/cmp-nvim-lsp-document-symbol",
 			"hrsh7th/cmp-calc",
 			{
 				"tzachar/cmp-tabnine",

@@ -56,6 +56,7 @@ local check_backspace = function()
 	return col == 0 or vim.fn.getline("."):sub(col, col):match("%s")
 end
 
+-- require("luasnip/loaders/from_snipmate").lazy_load({ paths = "./snippets" })
 require("luasnip.loaders.from_vscode").lazy_load()
 luasnip.config.set_config({ history = true, updateevents = "TextChanged,TextChangedI" })
 
@@ -97,7 +98,7 @@ cmp.setup({
 		["<C-p>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
 		["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
 		["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
-		["<C-d>"] = cmp.mapping.scroll_docs(-4),
+		["<C-b>"] = cmp.mapping.scroll_docs(-4),
 		["<C-f>"] = cmp.mapping.scroll_docs(4),
 		["<C-Space>"] = cmp.mapping(cmp.mapping.complete(), { "i", "c" }),
 		["<C-e>"] = cmp.mapping({
@@ -147,10 +148,18 @@ cmp.setup({
 		{ name = "nvim_lsp_signature_help" },
 		{ name = "cmp_tabnine" },
 		{ name = "nvim_lsp" },
+		{ name = "nvim_lua" },
 		{ name = "buffer", keyword_length = 5, max_item_count = 10 },
 		{ name = "path" },
 		{ name = "crates" },
 		{ name = "calc" },
-		{ name = "nvim_lua" },
 	},
+})
+
+cmp.setup.cmdline("/", {
+	sources = cmp.config.sources({
+		{ name = "nvim_lsp_document_symbol" },
+	}, {
+		{ name = "buffer" },
+	}),
 })

@@ -94,15 +94,30 @@ local function lsp_keymaps(bufnr)
 	u.buf_map("n", "gT", ":LspDef<CR>", nil, bufnr)
 	u.buf_map("n", "gD", ":LspDeclaration<CR>", nil, bufnr)
 	u.buf_map("n", "gi", ":LspImplementation<CR>", nil, bufnr)
-	u.buf_map("n", "<Leader>ff", ":LspFormatting<CR>", nil, bufnr)
+	-- u.buf_map("n", "<Leader>ff", ":LspFormatting<CR>", nil, bufnr)
 end
+
+local lsp_formatting = function(bufnr)
+	vim.lsp.buf.format({
+		filter = function(client)
+			-- apply whatever logic you want (in this example, we'll only use null-ls)
+			return client.name == "null-ls"
+		end,
+		bufnr = bufnr,
+	})
+end
+
+-- if you want to set up formatting on save, you can use this as a callback
+local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
 M.on_attach = function(client, bufnr)
 	if client.supports_method("textDocument/formatting") then
-		vim.lsp.buf.format({
-			bufnr = bufnr,
-			filter = function(clientd)
-				return clientd.name == "null-ls"
+		vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			group = augroup,
+			buffer = bufnr,
+			callback = function()
+				lsp_formatting(bufnr)
 			end,
 		})
 	end
@@ -117,25 +132,12 @@ end
 
 function M.enable_format_on_save()
 	vim.cmd([[
-    augroup format_on_save
-      autocmd! 
-      autocmd BufWritePre * lua vim.lsp.buf.format()
-    augroup end
-  ]])
-	-- vim.notify("Enabled format on save")
-end
-
-function M.disable_format_on_save()
-	M.remove_augroup("format_on_save")
-	vim.notify("Disabled format on save")
-end
-
-function M.toggle_format_on_save()
-	if vim.fn.exists("#format_on_save#BufWritePre") == 0 then
-		M.enable_format_on_save()
-	else
-		M.disable_format_on_save()
-	end
+	   augroup format_on_save
+	     autocmd!
+	     autocmd BufWritePre * lua vim.lsp.buf.format()
+	   augroup end
+	 ]])
+	vim.notify("Enabled format on save")
 end
 
 function M.remove_augroup(name)
@@ -162,7 +164,5 @@ function M.common_capabilities()
 
 	return capabilities
 end
-
-vim.cmd([[ command! LspToggleAutoFormat execute 'lua require("modules.lsp.handlers").toggle_format_on_save()' ]])
 
 return M

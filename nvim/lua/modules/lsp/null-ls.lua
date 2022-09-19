@@ -10,6 +10,12 @@ local function preferedEslint(utils)
 	return utils.root_has_file({ ".eslintrc", ".eslintrc.yml", ".eslintrc.yaml", ".eslintrc.js", "eslintrc.json" })
 end
 
+local command_resolver = require("null-ls.helpers.command_resolver")
+
+local prettier = b.formatting.prettier.with({
+	dynamic_command = command_resolver.from_node_modules(),
+})
+
 local sources = {
 	-- code action
 	--b.code_actions.eslint_d,
@@ -31,10 +37,11 @@ local sources = {
 	b.diagnostics.tidy, -- xml
 	b.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
 	-- formatting
+	prettier,
 	b.formatting.tidy,
 	b.formatting.prettierd.with({
 		extra_filetypes = { "yml", "toml", "solidity" },
-		extra_args = { "--single-quote", "--jsx-single-quote", "--print-width 100" },
+		extra_args = { "--single-quote", "--jsx-single-quote", "--print-width 80", "--trailing-comma es5" },
 	}),
 	b.formatting.stylua,
 	b.formatting.rustfmt, -- rust
