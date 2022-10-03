@@ -54,7 +54,6 @@ u.command("LspDef", "Telescope lsp_definitions")
 u.command("LspSym", "Telescope lsp_workspace_symbols")
 -- u.command("LspAct", "Telescope lsp_code_actions theme=cursor")
 u.command("LspAct", "lua vim.lsp.buf.code_action()")
-u.command("FixSuggestion", "lua vim.lsp.buf.range_code_action()") --  Telescope lsp_range_code_actions theme=cursor')
 
 -- local map = vim.api.nvim_set_keymap
 u.nmap("<Leader>T", ":Telescope<CR>")
@@ -63,7 +62,7 @@ u.nmap("<C-p>", "<cmd>lua require'telescope'.extensions.project.project{display_
 -- u.nmap('<Leader>e', '<cmd>lua require\'modules.plugins.telescope.config\'.project_files({theme=ivy})<cr>')
 map_tele("<space>e", "project_files", { theme = "ivy" })
 map_tele("<space>p", "file_browser")
-map_tele("<space>fz", "search_only_certain_files")
+map_tele("<space>ff", "search_only_certain_files")
 map_tele("<space>fd", "fd")
 map_tele("<space>dl", "Telescope diagnostics theme=ivy")
 map_tele("<space>gw", "grep_string", {
@@ -81,8 +80,7 @@ u.nmap("<Leader>o", "<cmd>History<CR>")
 
 -- lsp mappings/commands
 u.map("n", "<Leader>r", "<cmd>LspRef<CR>")
-u.map("n", "<Leader>w", "<cmd>FixSuggestion<CR>")
-u.map("n", "<Leader>cc", "<cmd>LspAct<CR>")
+u.map("n", "<Leader>w", "<cmd>LspAct<CR>")
 
 -- u.nmap('<Leader>t', ':Telescope treesitter<CR>')
 -- u.map('n', '<Leader>p', "<cmd>lua require 'telescope'.extensions.file_browser.file_browser({cwd = require'telescope.utils'.buffer_dir()})<CR>")
