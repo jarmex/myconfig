@@ -95,6 +95,9 @@ local function lsp_keymaps(bufnr)
 	u.buf_map("n", "gD", ":LspDeclaration<CR>", nil, bufnr)
 	u.buf_map("n", "gi", ":LspImplementation<CR>", nil, bufnr)
 	-- u.buf_map("n", "<Leader>ff", ":LspFormatting<CR>", nil, bufnr)
+
+	u.buf_map("n", "<Leader>gs", ":TypescriptOrganizeImports<CR>", nil, bufnr)
+	u.buf_map("n", "<Leader>ii", ":TypescriptAddMissingImports<CR>", nil, bufnr)
 end
 
 local lsp_formatting = function(bufnr)
@@ -159,7 +162,7 @@ function M.common_capabilities()
 
 	local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
 	if status_ok then
-		capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+		capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
 	end
 
 	return capabilities

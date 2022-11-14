@@ -409,6 +409,7 @@ return packer.startup(function(use)
 		"sindrets/diffview.nvim",
 		requires = "nvim-lua/plenary.nvim",
 	})
+
 	-- use({
 	-- 	"michaelb/sniprun",
 	-- 	run = "bash ./install.sh",
@@ -416,6 +417,12 @@ return packer.startup(function(use)
 	-- 		require("modules.plugins.sniprun")
 	-- 	end,
 	-- })
+	--
+	use({ "leoluz/nvim-dap-go" })
+	use({ "mfussenegger/nvim-dap-python" })
+	use({ "jose-elias-alvarez/typescript.nvim" })
+	use({ "mxsdev/nvim-dap-vscode-js" })
+	use({ "lvimuser/lsp-inlayhints.nvim" })
 
 	if packer_bootstrap then
 		require("packer").sync()

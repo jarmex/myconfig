@@ -51,6 +51,7 @@ local sources = {
 	--b.formatting.jq, --json
 	--django html
 	b.formatting.djlint,
+	require("typescript.extensions.null-ls.code-actions"),
 }
 
 null_ls.setup({
