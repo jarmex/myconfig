@@ -95,9 +95,6 @@ local function lsp_keymaps(bufnr)
 	u.buf_map("n", "gD", ":LspDeclaration<CR>", nil, bufnr)
 	u.buf_map("n", "gi", ":LspImplementation<CR>", nil, bufnr)
 	-- u.buf_map("n", "<Leader>ff", ":LspFormatting<CR>", nil, bufnr)
-
-	u.buf_map("n", "<Leader>gs", ":TypescriptOrganizeImports<CR>", nil, bufnr)
-	u.buf_map("n", "<Leader>ii", ":TypescriptAddMissingImports<CR>", nil, bufnr)
 end
 
 local lsp_formatting = function(bufnr)
