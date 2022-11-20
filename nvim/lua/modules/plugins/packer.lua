@@ -158,7 +158,7 @@ return packer.startup(function(use)
 			require("modules.plugins.treesitter")
 		end,
 	})
-
+	use("JoosepAlviste/nvim-ts-context-commentstring")
 	use("nvim-treesitter/nvim-treesitter-textobjects")
 	use("nvim-treesitter/nvim-tree-docs")
 	-- use({ "p00f/nvim-ts-rainbow" })
@@ -365,7 +365,7 @@ return packer.startup(function(use)
 	use({
 		"RRethy/vim-illuminate",
 		config = function()
-			vim.g.Illuminate_highlightUnderCursor = 0
+			require("modules.plugins.illuminate")
 		end,
 	})
 

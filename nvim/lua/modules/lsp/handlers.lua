@@ -45,16 +45,6 @@ M.setup = function()
 	})
 end
 
-local function lsp_highlight_document(client)
-	-- if client.resolved_capabilities.document_highlight then
-	local status_ok, illuminate = pcall(require, "illuminate")
-	if not status_ok then
-		return
-	end
-	illuminate.on_attach(client)
-	--end
-end
-
 local function lsp_keymaps(bufnr)
 	-- commands
 	u.lua_command("LspFormatting", "vim.lsp.buf.formatting_sync()")
@@ -127,7 +117,6 @@ M.on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
 
 	lsp_keymaps(bufnr)
-	lsp_highlight_document(client)
 end
 
 function M.enable_format_on_save()

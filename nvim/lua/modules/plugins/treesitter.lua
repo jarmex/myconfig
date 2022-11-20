@@ -17,6 +17,9 @@ treesitter_config.setup({
 	context_commentstring = {
 		enable = true,
 		enable_autocmd = false,
+		config = {
+			typescript = { __default = "// %s", __multiline = "/* %s */" },
+		},
 	},
 	autotag = {
 		enable = true,
@@ -76,4 +79,8 @@ treesitter_config.setup({
 			},
 		},
 	},
+})
+
+require("ts_context_commentstring.internal").update_commentstring({
+	key = "__multiline",
 })
