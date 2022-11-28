@@ -6,38 +6,24 @@ end
 local b = null_ls.builtins
 -- local utils = require("null-ls.utils").make_conditional_utils()
 
-local function preferedEslint(utils)
-	return utils.root_has_file({ ".eslintrc", ".eslintrc.yml", ".eslintrc.yaml", ".eslintrc.js", "eslintrc.json" })
-end
+-- local command_resolver = require("null-ls.helpers.command_resolver")
 
-local command_resolver = require("null-ls.helpers.command_resolver")
-
-local prettier = b.formatting.prettier.with({
-	dynamic_command = command_resolver.from_node_modules(),
-})
+-- local prettier = b.formatting.prettier.with({
+-- 	dynamic_command = command_resolver.from_node_modules(),
+-- })
 
 local sources = {
 	-- code action
 	--b.code_actions.eslint_d,
-	b.code_actions.eslint.with({
-		prefer_local = "node_modules/.bin",
-		condition = function(utils)
-			return preferedEslint(utils)
-		end,
-	}),
+	b.code_actions.eslint,
 	-- diagnostics
 	b.diagnostics.yamllint.with({ extra_filetypes = { "yml" } }), -- add support for yml extensions
 	b.diagnostics.hadolint, -- dockerfile
-	b.diagnostics.eslint.with({
-		prefer_local = "node_modules/.bin",
-		condition = function(utils)
-			return preferedEslint(utils)
-		end,
-	}),
+	b.diagnostics.eslint,
 	b.diagnostics.tidy, -- xml
 	b.diagnostics.sqlfluff.with({ extra_args = { "--dialect", "postgres" } }),
 	-- formatting
-	prettier,
+	b.formatting.prettier,
 	b.formatting.tidy,
 	b.formatting.prettierd.with({
 		extra_filetypes = { "yml", "toml", "solidity" },

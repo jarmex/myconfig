@@ -1,5 +1,11 @@
 local u = require("modules.utils.utils")
+local f = require("modules.utils.func")
+
 local M = {}
+
+local lsp = vim.lsp
+
+local eslint_disabled_buffers = {}
 
 M.setup = function()
 	local icons = require("modules.utils.icons")
@@ -87,36 +93,66 @@ local function lsp_keymaps(bufnr)
 	-- u.buf_map("n", "<Leader>ff", ":LspFormatting<CR>", nil, bufnr)
 end
 
-local lsp_formatting = function(bufnr)
-	vim.lsp.buf.format({
-		filter = function(client)
-			-- apply whatever logic you want (in this example, we'll only use null-ls)
-			return client.name == "null-ls"
-		end,
-		bufnr = bufnr,
-	})
-end
-
 -- if you want to set up formatting on save, you can use this as a callback
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-M.on_attach = function(client, bufnr)
-	if client.supports_method("textDocument/formatting") then
-		vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = augroup,
-			buffer = bufnr,
-			callback = function()
-				lsp_formatting(bufnr)
-			end,
-		})
-	end
+local lsp_formatting = function(bufnr)
+	-- adapted from https://github.com/jose-elias-alvarez/dotfiles/blob/main/config/nvim/lua/lsp/init.lua
+	local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+	lsp.buf.format({
+		bufnr = bufnr,
+		filter = function(client)
+			if client.name == "eslint" then
+				return not eslint_disabled_buffers[bufnr]
+			end
 
+			if client.name == "null-ls" then
+				return not f.table.some(clients, function(_, other_client)
+					return other_client.name == "eslint" and not eslint_disabled_buffers[bufnr]
+				end)
+			end
+		end,
+	})
+	-- vim.lsp.buf.format({
+	-- 	filter = function(client)
+	-- 		-- apply whatever logic you want (in this example, we'll only use null-ls)
+	-- 		return client.name == "null-ls"
+	-- 	end,
+	-- 	bufnr = bufnr,
+	-- })
+end
+
+M.on_attach = function(client, bufnr)
 	vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 	vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
 
 	lsp_keymaps(bufnr)
+
+	-- if client.supports_method("textDocument/formatting") then
+	-- 	vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+	-- 	vim.api.nvim_create_autocmd("BufWritePre", {
+	-- 		group = augroup,
+	-- 		buffer = bufnr,
+	-- 		callback = function()
+	-- 			lsp_formatting(bufnr)
+	-- 		end,
+	-- 	})
+	-- end
+	if client.supports_method("textDocument/formatting") then
+		local formatting_cb = function()
+			lsp_formatting(bufnr)
+		end
+		f.buf_command(bufnr, "LspFormatting", formatting_cb)
+		f.buf_map(bufnr, "x", "<CR>", formatting_cb)
+
+		vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			group = augroup,
+			buffer = bufnr,
+			command = "LspFormatting",
+		})
+	end
 end
 
 function M.enable_format_on_save()

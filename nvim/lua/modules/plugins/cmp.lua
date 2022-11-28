@@ -144,10 +144,10 @@ cmp.setup({
 		},
 	},
 	sources = {
+		{ name = "nvim_lsp" },
 		{ name = "luasnip" },
 		{ name = "nvim_lsp_signature_help" },
 		{ name = "cmp_tabnine" },
-		{ name = "nvim_lsp" },
 		{ name = "nvim_lua" },
 		{ name = "buffer", keyword_length = 5, max_item_count = 10 },
 		{ name = "path" },
@@ -156,10 +156,19 @@ cmp.setup({
 	},
 })
 
-cmp.setup.cmdline("/", {
+cmp.setup.cmdline({ "/", "?" }, {
+	mapping = cmp.mapping.preset.cmdline(),
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp_document_symbol" },
 	}, {
 		{ name = "buffer" },
 	}),
 })
+-- Set configuration for specific filetype.
+-- cmp.setup.filetype("gitcommit", {
+-- 	sources = cmp.config.sources({
+-- 		{ name = "cmp_git" }, -- You can specify the `cmp_git` source if you were installed it.
+-- 	}, {
+-- 		{ name = "buffer" },
+-- 	}),
+-- })
