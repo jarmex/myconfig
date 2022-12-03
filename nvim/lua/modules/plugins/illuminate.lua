@@ -11,7 +11,7 @@ illuminate.configure({
 		"regex",
 	},
 	-- delay: delay in milliseconds
-	delay = 100,
+	delay = 500,
 	-- filetypes_denylist: filetypes to not illuminate, this overrides filetypes_allowlist
 	filetypes_denylist = {
 		"dirvish",
@@ -33,4 +33,10 @@ illuminate.configure({
 	providers_regex_syntax_allowlist = {},
 	-- under_cursor: whether or not to illuminate under the cursor
 	under_cursor = true,
+	large_file_cutoff = 10000,
+	large_file_overrides = {
+		providers = { "regex" },
+		delay = 500,
+		modes_allowlist = { "n" },
+	},
 })

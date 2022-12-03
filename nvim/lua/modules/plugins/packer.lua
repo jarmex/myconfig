@@ -67,7 +67,7 @@ return packer.startup(function(use)
 		"neovim/nvim-lspconfig",
 		requires = {
 			"ray-x/lsp_signature.nvim",
-			"jose-elias-alvarez/nvim-lsp-ts-utils",
+			-- "jose-elias-alvarez/nvim-lsp-ts-utils",
 			"jose-elias-alvarez/null-ls.nvim",
 		},
 		config = function()
@@ -239,12 +239,12 @@ return packer.startup(function(use)
 	-- 	end,
 	-- })
 
-	use({
-		"norcalli/nvim-colorizer.lua",
-		config = function()
-			require("modules.plugins.colorizer")
-		end,
-	})
+	-- use({
+	-- 	"norcalli/nvim-colorizer.lua",
+	-- 	config = function()
+	-- 		require("modules.plugins.colorizer")
+	-- 	end,
+	-- })
 	-- Tabs
 	use({
 		"akinsho/nvim-bufferline.lua",
