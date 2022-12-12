@@ -66,7 +66,7 @@ vim.opt.completeopt = "menu,menuone,noselect"
 cmp.setup({
 	snippet = {
 		expand = function(args)
-			require("luasnip").lsp_expand(args.body)
+			luasnip.lsp_expand(args.body)
 		end,
 	},
 	completion = {
@@ -113,10 +113,10 @@ cmp.setup({
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
-			elseif luasnip.expandable() then
-				luasnip.expand()
 			elseif luasnip.expand_or_jumpable() then
 				luasnip.expand_or_jump()
+			elseif luasnip.expandable() then
+				luasnip.expand()
 			elseif check_backspace() then
 				fallback()
 			else
@@ -144,9 +144,9 @@ cmp.setup({
 		},
 	},
 	sources = {
-		{ name = "nvim_lsp" },
 		{ name = "luasnip" },
 		{ name = "nvim_lsp_signature_help" },
+		{ name = "nvim_lsp" },
 		{ name = "cmp_tabnine" },
 		{ name = "nvim_lua" },
 		{ name = "buffer", keyword_length = 5, max_item_count = 10 },
