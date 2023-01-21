@@ -66,7 +66,7 @@ vim.opt.completeopt = "menu,menuone,noselect"
 cmp.setup({
 	snippet = {
 		expand = function(args)
-			luasnip.lsp_expand(args.body)
+			require("luasnip").lsp_expand(args.body)
 		end,
 	},
 	completion = {
@@ -113,10 +113,10 @@ cmp.setup({
 		["<Tab>"] = cmp.mapping(function(fallback)
 			if cmp.visible() then
 				cmp.select_next_item()
-			elseif luasnip.expand_or_jumpable() then
-				luasnip.expand_or_jump()
 			elseif luasnip.expandable() then
 				luasnip.expand()
+			elseif luasnip.expand_or_jumpable() then
+				luasnip.expand_or_jump()
 			elseif check_backspace() then
 				fallback()
 			else
@@ -146,8 +146,8 @@ cmp.setup({
 	sources = {
 		{ name = "luasnip" },
 		{ name = "nvim_lsp_signature_help" },
-		{ name = "nvim_lsp" },
 		{ name = "cmp_tabnine" },
+		{ name = "nvim_lsp" },
 		{ name = "nvim_lua" },
 		{ name = "buffer", keyword_length = 5, max_item_count = 10 },
 		{ name = "path" },
@@ -156,7 +156,7 @@ cmp.setup({
 	},
 })
 
-cmp.setup.cmdline({ "/", "?" }, {
+cmp.setup.cmdline("/", {
 	mapping = cmp.mapping.preset.cmdline(),
 	sources = cmp.config.sources({
 		{ name = "nvim_lsp_document_symbol" },
@@ -164,11 +164,3 @@ cmp.setup.cmdline({ "/", "?" }, {
 		{ name = "buffer" },
 	}),
 })
--- Set configuration for specific filetype.
--- cmp.setup.filetype("gitcommit", {
--- 	sources = cmp.config.sources({
--- 		{ name = "cmp_git" }, -- You can specify the `cmp_git` source if you were installed it.
--- 	}, {
--- 		{ name = "buffer" },
--- 	}),
--- })

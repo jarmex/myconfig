@@ -10,11 +10,13 @@ end
 
 local u = require("modules.utils.utils")
 
-u.nmap("<F5>", '<cmd> lua require("dap").continue<CR>')
-u.nmap("<F10>", '<cmd> lua require("dap").step_over<CR>')
-u.nmap("<F11>", '<cmd> lua require("dap").step_into<CR>')
-u.nmap("<F12>", '<cmd> lua require("dap").step_out<CR>')
-u.nmap("<F3>", '<cmd> lua require("dap").toggle_breakpoint<CR>')
+u.nmap("<F5>", '<cmd> lua require("dap").continue()<CR>')
+u.nmap("<F10>", '<cmd> lua require("dap").step_over()<CR>')
+u.nmap("<F11>", '<cmd> lua require("dap").step_into()<CR>')
+u.nmap("<F12>", '<cmd> lua require("dap").step_out()<CR>')
+u.nmap("<F3>", '<cmd> lua require("dap").toggle_breakpoint()<CR>')
+u.nmap("<Leader>B", '<cmd> lua require("dap").toggle_breakpoint()<CR>')
+u.nmap("<Leader>dr", ':lua require("dap").repl.open()<CR>')
 --[[ u.nmap("<space>dr", "<cmd> lua require(\"dap\").repl.open<CR>" )
 u.nmap("<space>dl", "<cmd> lua require(\"dap\").run_last<CR>" ) ]]
 --[[ vim.fn.sign_define("DapBreakpoint", { text = "", texthl = "Breakpoint" })
@@ -33,14 +35,41 @@ dapui.setup({
 		toggle = "t",
 	},
 	layouts = {
-		elements = {
-			"scopes",
-			"breakpoints",
-			"stacks",
-			"watches",
+		{
+			elements = {
+				-- Elements can be strings or table with id and size keys.
+				{ id = "scopes", size = 0.25 },
+				"breakpoints",
+				"stacks",
+				"watches",
+			},
+			size = 40, -- 40 columns
+			position = "left",
 		},
-		size = 40,
-		position = "right", -- Can be "left", "right", "top", "bottom"
+		{
+			elements = {
+				"repl",
+				"console",
+			},
+			size = 0.25, -- 25% of total lines
+			position = "bottom",
+		},
+	},
+	controls = {
+		-- Requires Neovim nightly (or 0.8 when released)
+		enabled = true,
+		-- Display controls in this element
+		element = "repl",
+		icons = {
+			pause = "",
+			play = "",
+			step_into = "",
+			step_over = "",
+			step_out = "",
+			step_back = "",
+			run_last = "",
+			terminate = "",
+		},
 	},
 	floating = {
 		max_height = nil, -- These can be integers or a float between 0 and 1.

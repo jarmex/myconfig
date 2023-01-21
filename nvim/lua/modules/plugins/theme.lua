@@ -57,7 +57,7 @@ local config = {
 		telescope = true,
 		nvimtree = {
 			enabled = true,
-			show_root = true,
+			show_root = false, -- when false (-- makes the root folder not transparent)
 			transparent_panel = true,
 		},
 		neotree = {

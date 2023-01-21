@@ -7,7 +7,7 @@ end
 lspconfig.emmet_ls.setup({
 	on_attach = require("modules.lsp.handlers").on_attach,
 	capabilities = require("modules.lsp.handlers").common_capabilities(),
-	cmd = { "ls_emmet", "--stdio" },
+	-- cmd = { "emmet_ls", "--stdio" },
 	filetypes = {
 		"html",
 		"css",
@@ -17,7 +17,6 @@ lspconfig.emmet_ls.setup({
 		"typescript",
 		"typescriptreact",
 		"haml",
-		"xml",
 		"xsl",
 		"pug",
 		"slim",

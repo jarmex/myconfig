@@ -59,34 +59,21 @@ vim.api.nvim_create_autocmd({ "TextYankPost" }, {
 		vim.highlight.on_yank({ higroup = "Visual", timeout = 200 })
 	end,
 })
--- vim.api.nvim_create_autocmd({ "CursorMoved", "BufWinEnter", "BufFilePost" }, {
--- 	callback = function()
--- 		local winbar_filetype_exclude = {
--- 			"help",
--- 			"startify",
--- 			"dashboard",
--- 			"packer",
--- 			"neogitstatus",
--- 			"NvimTree",
--- 			"Trouble",
--- 			"alpha",
--- 			"lir",
--- 			"Outline",
--- 			"spectre_panel",
--- 			"toggleterm",
--- 		}
---
--- 		if vim.tbl_contains(winbar_filetype_exclude, vim.bo.filetype) then
--- 			vim.opt_local.winbar = nil
--- 			return
--- 		end
---
--- 		local value = require("modules.core.winbar").gps()
---
--- 		if value == nil then
--- 			value = require("modules.core.winbar").filename()
--- 		end
---
--- 		vim.opt_local.winbar = value
--- 	end,
--- })
+-- when there is no buffer left show Alpha dashboard
+-- requires "famiu/bufdelete.nvim" and "goolord/alpha-nvim"
+local alpha_on_empty = vim.api.nvim_create_augroup("alpha_on_empty", { clear = true })
+vim.api.nvim_create_autocmd("User", {
+	pattern = "BDeletePost*",
+	group = alpha_on_empty,
+	callback = function(event)
+		local fallback_name = vim.api.nvim_buf_get_name(event.buf)
+		local fallback_ft = vim.api.nvim_buf_get_option(event.buf, "filetype")
+		local fallback_on_empty = fallback_name == "" and fallback_ft == ""
+
+		if fallback_on_empty then
+			-- require("neo-tree").close_all()
+			vim.api.nvim_command("Alpha")
+			vim.api.nvim_command(event.buf .. "bwipeout")
+		end
+	end,
+})

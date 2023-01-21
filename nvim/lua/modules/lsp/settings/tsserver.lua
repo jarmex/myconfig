@@ -1,71 +1,72 @@
 local u = require("modules.utils.utils")
 
--- lspconfig.tsserver.setup({
--- 	capabilities = require("modules.lsp.handlers").common_capabilities(),
--- 	init_options = require("nvim-lsp-ts-utils").init_options,
--- 	flags = {
--- 		debounce_text_changes = 150,
--- 	},
---
--- 	on_attach = function(client, bufnr)
--- 		local ts_utils = require("nvim-lsp-ts-utils")
--- 		-- defaults
--- 		ts_utils.setup(ts_util_config)
--- 		-- required to fix code action ranges and filter diagnostics
--- 		ts_utils.setup_client(client)
---
--- 		-- no default maps, so you may want to define some here
--- 		-- local opts = { silent = true }
--- 		u.buf_map("n", "<Leader>gs", ":TSLspOrganize<CR>", nil, bufnr)
--- 		u.buf_map("n", "<Leader>gi", ":TSLspImportAll<CR>", nil, bufnr)
--- 		u.buf_map("n", "<Leader>gr", ":TSLspRenameFileCR>", nil, bufnr)
--- 		u.buf_map("n", "<Leader>ii", ":TSLspImportCurrent<CR>", nil, bufnr)
---
--- 		require("modules.lsp.handlers").on_attach(client, bufnr)
--- 	end,
--- })
+local capabilities = require("modules.lsp.handlers").common_capabilities()
 
-local onattach = require("modules.lsp.handlers")
 require("typescript").setup({
 	-- disable_commands = false, -- prevent the plugin from creating Vim commands
 	debug = false, -- enable debug logging for commands
 	go_to_source_definition = {
 		fallback = true, -- fall back to standard LSP definition on failure
 	},
-	settings = {
-		typescript = {
-			inlayHints = {
-				includeInlayParameterNameHints = "all",
-				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-				includeInlayFunctionParameterTypeHints = true,
-				includeInlayVariableTypeHints = true,
-				includeInlayPropertyDeclarationTypeHints = true,
-				includeInlayFunctionLikeReturnTypeHints = true,
-				includeInlayEnumMemberValueHints = true,
-			},
-		},
-		javascript = {
-			inlayHints = {
-				includeInlayParameterNameHints = "all",
-				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-				includeInlayFunctionParameterTypeHints = true,
-				includeInlayVariableTypeHints = true,
-				includeInlayPropertyDeclarationTypeHints = true,
-				includeInlayFunctionLikeReturnTypeHints = true,
-				includeInlayEnumMemberValueHints = true,
-			},
-		},
-	},
 	server = { -- pass options to lspconfig's setup method
 		on_attach = function(client, bufnr)
-			onattach.on_attach(client, bufnr)
+			require("modules.lsp.handlers").on_attach(client, bufnr)
 			u.buf_map("n", "go", ":TypescriptAddMissingImports<CR>", nil, bufnr)
 			u.buf_map("n", "gO", ":TypescriptOrganizeImports<CR>", nil, bufnr)
-			u.buf_map("n", "gI", ":TypescriptRenameFile<CR>", nil, bufnr)
-
-			-- override
 			u.buf_map("n", "gd", ":TypescriptGoToSourceDefinition<CR>", nil, bufnr)
 		end,
-		capabilities = require("modules.lsp.handlers").common_capabilities(),
+		capabilities = capabilities,
+		settings = {
+			typescript = {
+				inlayHints = {
+					includeInlayParameterNameHints = "all",
+					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+					includeInlayFunctionParameterTypeHints = true,
+					includeInlayVariableTypeHints = true,
+					includeInlayPropertyDeclarationTypeHints = true,
+					includeInlayFunctionLikeReturnTypeHints = true,
+					includeInlayEnumMemberValueHints = true,
+				},
+			},
+			javascript = {
+				inlayHints = {
+					includeInlayParameterNameHints = "all",
+					includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+					includeInlayFunctionParameterTypeHints = true,
+					includeInlayVariableTypeHints = true,
+					includeInlayPropertyDeclarationTypeHints = true,
+					includeInlayFunctionLikeReturnTypeHints = true,
+					includeInlayEnumMemberValueHints = true,
+				},
+			},
+		},
 	},
 })
+
+local mason_path = vim.fn.glob(vim.fn.stdpath("data") .. "/mason/")
+require("dap-vscode-js").setup({
+	-- node_path = "node", -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+	debugger_path = mason_path .. "packages/js-debug-adapter", -- Path to vscode-js-debug installation.
+	-- debugger_cmd = { "js-debug-adapter" }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+	adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" }, -- which adapters to register in nvim-dap
+})
+
+for _, language in ipairs({ "typescript", "javascript" }) do
+	require("dap").configurations[language] = {
+		{
+			type = "pwa-node",
+			request = "launch",
+			name = "Debug Jest Tests",
+			-- trace = true, -- include debugger info
+			runtimeExecutable = "node",
+			runtimeArgs = {
+				"./node_modules/jest/bin/jest.js",
+				"--runInBand",
+			},
+			rootPath = "${workspaceFolder}",
+			cwd = "${workspaceFolder}",
+			console = "integratedTerminal",
+			internalConsoleOptions = "neverOpen",
+		},
+	}
+end

@@ -1,8 +1,11 @@
 pcall(require, "impatient")
 
- _G.global = {}
+P = function(v)
+	print(vim.inspect(v))
+	return v
+end
 
-require('modules.core')
-require('modules.plugins')
--- require('modules.lsp')
+_G.global = {}
 
+require("modules.core")
+require("modules.plugins")

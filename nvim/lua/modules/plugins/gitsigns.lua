@@ -75,10 +75,5 @@ gitsigns.setup({
 		relative = "cursor",
 		row = 0,
 		col = 1,
-		border = "single",
-		style = "minimal",
-		relative = "cursor",
-		row = 0,
-		col = 1,
 	},
 })

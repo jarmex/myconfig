@@ -1,20 +1,18 @@
 -- adopted from https://github.com/n3wborn/nvim/blob/main/lua/modules/plugins/packer.lua
 
--- local cmd = vim.api.nvim_command
-local install_path = vim.fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
-local fn = vim.fn
-
 -- install packer if needed
-if fn.empty(fn.glob(install_path)) > 0 then
-	packer_bootstrap = fn.system({
-		"git",
-		"clone",
-		"--depth",
-		"1",
-		"https://github.com/wbthomason/packer.nvim",
-		install_path,
-	})
+local ensure_packer = function()
+	local fn = vim.fn
+	local install_path = fn.stdpath("data") .. "/site/pack/packer/start/packer.nvim"
+	if fn.empty(fn.glob(install_path)) > 0 then
+		fn.system({ "git", "clone", "--depth", "1", "https://github.com/wbthomason/packer.nvim", install_path })
+		vim.cmd([[packadd packer.nvim]])
+		return true
+	end
+	return false
 end
+
+local packer_bootstrap = ensure_packer()
 
 -- Autocommand that reloads neovim whenever you save the plugins.lua file
 vim.cmd([[
@@ -97,6 +95,7 @@ return packer.startup(function(use)
 			"hrsh7th/cmp-buffer",
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-nvim-lua",
+			"hrsh7th/cmp-cmdline",
 			"onsails/lspkind-nvim",
 			"rafamadriz/friendly-snippets",
 			"hrsh7th/cmp-nvim-lsp-signature-help",
@@ -146,7 +145,7 @@ return packer.startup(function(use)
 			{ "nvim-telescope/telescope-fzf-native.nvim", run = "make" },
 		},
 		config = function()
-			require("modules.plugins.telescope.init")
+			require("modules.plugins.telescope")
 		end,
 	})
 
@@ -158,7 +157,7 @@ return packer.startup(function(use)
 			require("modules.plugins.treesitter")
 		end,
 	})
-	use("JoosepAlviste/nvim-ts-context-commentstring")
+
 	use("nvim-treesitter/nvim-treesitter-textobjects")
 	use("nvim-treesitter/nvim-tree-docs")
 	-- use({ "p00f/nvim-ts-rainbow" })
@@ -239,12 +238,12 @@ return packer.startup(function(use)
 	-- 	end,
 	-- })
 
-	-- use({
-	-- 	"norcalli/nvim-colorizer.lua",
-	-- 	config = function()
-	-- 		require("modules.plugins.colorizer")
-	-- 	end,
-	-- })
+	use({
+		"norcalli/nvim-colorizer.lua",
+		config = function()
+			require("modules.plugins.colorizer")
+		end,
+	})
 	-- Tabs
 	use({
 		"akinsho/nvim-bufferline.lua",
@@ -281,16 +280,22 @@ return packer.startup(function(use)
 		end,
 	})
 
-	-- use({
-	-- 	"simrat39/symbols-outline.nvim",
-	-- 	cmd = { "SymbolsOutline" },
-	-- 	config = function()
-	-- 		require("modules.plugins.symbol-outline")
-	-- 	end,
-	-- })
+	use({
+		"simrat39/symbols-outline.nvim",
+		config = function()
+			require("modules.plugins.symbol-outline")
+		end,
+	})
 
 	-- Start Screen
-	use({ "mhinz/vim-startify" })
+	-- use({ "mhinz/vim-startify" })
+	use({
+		"goolord/alpha-nvim",
+		requires = { "nvim-tree/nvim-web-devicons" },
+		config = function()
+			require("modules.plugins.alphanvim")
+		end,
+	})
 
 	--[[ use("tpope/vim-dadbod")
   use("kristijanhusak/vim-dadbod-completion")
@@ -305,13 +310,26 @@ return packer.startup(function(use)
 		end,
 	})
 	use("theHamsta/nvim-dap-virtual-text")
-	use("rcarriga/nvim-dap-ui")
+	use({ "rcarriga/nvim-dap-ui", requires = { "mfussenegger/nvim-dap" } })
 	use("Pocco81/DAPInstall.nvim")
+	use({
+		"leoluz/nvim-dap-go",
+		config = function()
+			require("dap-go").setup()
+		end,
+	})
+
+	use("jose-elias-alvarez/typescript.nvim")
+
+	use("olexsmir/gopher.nvim")
+	use("mxsdev/nvim-dap-vscode-js")
 
 	use({
-		"nathom/filetype.nvim",
+		"jinh0/eyeliner.nvim",
 		config = function()
-			vim.g.did_load_filetypes = 1
+			require("eyeliner").setup({
+				highlight_on_key = true,
+			})
 		end,
 	})
 
@@ -341,9 +359,9 @@ return packer.startup(function(use)
 	-- })
 
 	-- adding JAVA plugins
-	use({
-		"mfussenegger/nvim-jdtls",
-	})
+	-- use({
+	-- 	"mfussenegger/nvim-jdtls",
+	-- })
 
 	use({
 		"nacro90/numb.nvim",
@@ -351,9 +369,10 @@ return packer.startup(function(use)
 			require("modules.plugins.numb")
 		end,
 	})
-	-- use({
-	-- 	"antoinemadec/FixCursorHold.nvim", -- This is needed to fix lsp doc highlight
-	-- })
+
+	use({
+		"antoinemadec/FixCursorHold.nvim", -- This is needed to fix lsp doc highlight
+	})
 
 	use({
 		"rcarriga/nvim-notify",
@@ -365,7 +384,7 @@ return packer.startup(function(use)
 	use({
 		"RRethy/vim-illuminate",
 		config = function()
-			require("modules.plugins.illuminate")
+			vim.g.Illuminate_highlightUnderCursor = 0
 		end,
 	})
 
@@ -394,7 +413,12 @@ return packer.startup(function(use)
 		event = { "BufRead Cargo.toml" },
 		requires = { { "nvim-lua/plenary.nvim" } },
 		config = function()
-			require("crates").setup()
+			require("crates").setup({
+				null_ls = {
+					enabled = true,
+					name = "crates.nvim",
+				},
+			})
 		end,
 	})
 	use({
@@ -405,24 +429,63 @@ return packer.startup(function(use)
 		end,
 	})
 
+	-- not using now
+	-- use({
+	-- 	"sindrets/diffview.nvim",
+	-- 	requires = "nvim-lua/plenary.nvim",
+	-- })
 	use({
-		"sindrets/diffview.nvim",
-		requires = "nvim-lua/plenary.nvim",
+		"lvimuser/lsp-inlayhints.nvim",
+		config = function()
+			require("modules.plugins.inlay-hints")
+		end,
 	})
 
+	-- Set root directory properly
+	use({
+		"ahmedkhalf/project.nvim",
+		config = function()
+			require("modules.plugins.projectnvim")
+		end,
+	})
+
+	--run any kind of tests from Vim (RSpec, Cucumber, Minitest)
 	-- use({
-	-- 	"michaelb/sniprun",
-	-- 	run = "bash ./install.sh",
+	-- 	-- "vim-test/vim-test",
+	-- 	"klen/nvim-test",
 	-- 	config = function()
-	-- 		require("modules.plugins.sniprun")
+	-- 		require("modules.plugins.nvimtest")
 	-- 	end,
 	-- })
-	--
-	use({ "leoluz/nvim-dap-go" })
-	use({ "mfussenegger/nvim-dap-python" })
-	use({ "jose-elias-alvarez/typescript.nvim" })
-	use({ "mxsdev/nvim-dap-vscode-js" })
-	use({ "lvimuser/lsp-inlayhints.nvim" })
+	use({
+		"nvim-neotest/neotest",
+		requires = {
+			"nvim-lua/plenary.nvim",
+			"nvim-treesitter/nvim-treesitter",
+			"antoinemadec/FixCursorHold.nvim",
+			"nvim-neotest/neotest-go",
+			"haydenmeade/neotest-jest",
+			"rouge8/neotest-rust",
+		},
+		config = function()
+			require("modules.plugins.neotest")
+		end,
+	})
+	-- for lua stuff
+	use({
+		"folke/neodev.nvim",
+		config = function()
+			require("neodev").setup({})
+		end,
+	})
+	-- fold area
+	use({
+		"kevinhwang91/nvim-ufo",
+		requires = "kevinhwang91/promise-async",
+		config = function()
+			require("modules.plugins.folds")
+		end,
+	})
 
 	if packer_bootstrap then
 		require("packer").sync()

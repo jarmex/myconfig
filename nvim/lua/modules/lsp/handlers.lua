@@ -1,11 +1,6 @@
 local u = require("modules.utils.utils")
-local f = require("modules.utils.func")
-
 local M = {}
-
-local lsp = vim.lsp
-
-local eslint_disabled_buffers = {}
+local has_ufo, ufo = pcall(require, "ufo")
 
 M.setup = function()
 	local icons = require("modules.utils.icons")
@@ -21,7 +16,7 @@ M.setup = function()
 	end
 
 	local config = {
-		-- disable virtual text
+		-- virtual text => set to false to disable the virtual text
 		virtual_text = false,
 		-- show signs
 		signs = {
@@ -51,6 +46,29 @@ M.setup = function()
 	})
 end
 
+local function lsp_highlight_document(client)
+	-- if client.resolved_capabilities.document_highlight then
+	local status_ok, illuminate = pcall(require, "illuminate")
+	if not status_ok then
+		return
+	end
+	illuminate.on_attach(client)
+	--end
+end
+
+local show_documentation = function(bufnr)
+	local filetype = vim.api.nvim_buf_get_option(bufnr, "filetype")
+	if filetype == "lua" then
+		local line = vim.api.nvim_get_current_line()
+		if vim.regex([[vim\.\([bwg]\?o\|opt\|api\)\.]]):match_str(line) then
+			vim.cmd.help(vim.fn.expand("<cword>"))
+			return
+		end
+	end
+
+	vim.lsp.buf.hover()
+end
+
 local function lsp_keymaps(bufnr)
 	-- commands
 	u.lua_command("LspFormatting", "vim.lsp.buf.formatting_sync()")
@@ -71,7 +89,19 @@ local function lsp_keymaps(bufnr)
 	-- bindings
 	u.buf_map("n", "<Leader>cr", ":LspRename<CR>", nil, bufnr)
 	u.buf_map("n", "gy", ":LspTypeDef<CR>", nil, bufnr)
-	u.buf_map("n", "K", ":LspHover<CR>", nil, bufnr)
+	--u.buf_map("n", "K", ":LspHover<CR>", nil, bufnr)
+	local bufopts = { buffer = bufnr, silent = true }
+	vim.keymap.set("n", "K", function()
+		local winid
+		if has_ufo then
+			winid = ufo.peekFoldedLinesUnderCursor()
+		end
+
+		if not winid then
+			show_documentation(bufnr)
+		end
+	end, bufopts)
+
 	u.buf_map("n", "]a", ":LspDiagList<CR>", nil, bufnr)
 	u.buf_map("n", "[d", ":LspDiagPrev<CR>", nil, bufnr)
 	u.buf_map("n", "]d", ":LspDiagNext<CR>", nil, bufnr)
@@ -93,66 +123,37 @@ local function lsp_keymaps(bufnr)
 	-- u.buf_map("n", "<Leader>ff", ":LspFormatting<CR>", nil, bufnr)
 end
 
+local lsp_formatting = function(bufnr)
+	vim.lsp.buf.format({
+		filter = function(client)
+			-- apply whatever logic you want (in this example, we'll only use null-ls)
+			return client.name == "null-ls"
+		end,
+		bufnr = bufnr,
+	})
+end
+
 -- if you want to set up formatting on save, you can use this as a callback
 local augroup = vim.api.nvim_create_augroup("LspFormatting", {})
 
-local lsp_formatting = function(bufnr)
-	-- adapted from https://github.com/jose-elias-alvarez/dotfiles/blob/main/config/nvim/lua/lsp/init.lua
-	local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
-	lsp.buf.format({
-		bufnr = bufnr,
-		filter = function(client)
-			if client.name == "eslint" then
-				return not eslint_disabled_buffers[bufnr]
-			end
-
-			if client.name == "null-ls" then
-				return not f.table.some(clients, function(_, other_client)
-					return other_client.name == "eslint" and not eslint_disabled_buffers[bufnr]
-				end)
-			end
-		end,
-	})
-	-- vim.lsp.buf.format({
-	-- 	filter = function(client)
-	-- 		-- apply whatever logic you want (in this example, we'll only use null-ls)
-	-- 		return client.name == "null-ls"
-	-- 	end,
-	-- 	bufnr = bufnr,
-	-- })
-end
-
 M.on_attach = function(client, bufnr)
+	if client.supports_method("textDocument/formatting") then
+		vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
+		vim.api.nvim_create_autocmd("BufWritePre", {
+			group = augroup,
+			buffer = bufnr,
+			callback = function()
+				lsp_formatting(bufnr)
+			end,
+		})
+	end
+
 	vim.api.nvim_buf_set_option(bufnr, "formatexpr", "v:lua.vim.lsp.formatexpr()")
 	vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 	vim.api.nvim_buf_set_option(bufnr, "tagfunc", "v:lua.vim.lsp.tagfunc")
 
 	lsp_keymaps(bufnr)
-
-	-- if client.supports_method("textDocument/formatting") then
-	-- 	vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-	-- 	vim.api.nvim_create_autocmd("BufWritePre", {
-	-- 		group = augroup,
-	-- 		buffer = bufnr,
-	-- 		callback = function()
-	-- 			lsp_formatting(bufnr)
-	-- 		end,
-	-- 	})
-	-- end
-	if client.supports_method("textDocument/formatting") then
-		local formatting_cb = function()
-			lsp_formatting(bufnr)
-		end
-		f.buf_command(bufnr, "LspFormatting", formatting_cb)
-		f.buf_map(bufnr, "x", "<CR>", formatting_cb)
-
-		vim.api.nvim_clear_autocmds({ group = augroup, buffer = bufnr })
-		vim.api.nvim_create_autocmd("BufWritePre", {
-			group = augroup,
-			buffer = bufnr,
-			command = "LspFormatting",
-		})
-	end
+	lsp_highlight_document(client)
 end
 
 function M.enable_format_on_save()
@@ -172,6 +173,11 @@ function M.remove_augroup(name)
 end
 
 function M.common_capabilities()
+	local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
+	if status_ok then
+		return cmp_nvim_lsp.default_capabilities()
+	end
+
 	local capabilities = vim.lsp.protocol.make_client_capabilities()
 	capabilities.textDocument.completion.completionItem.snippetSupport = true
 	capabilities.textDocument.completion.completionItem.resolveSupport = {
@@ -181,10 +187,15 @@ function M.common_capabilities()
 			"additionalTextEdits",
 		},
 	}
+	capabilities.window = {
+		workDoneProgress = true,
+	}
 
-	local status_ok, cmp_nvim_lsp = pcall(require, "cmp_nvim_lsp")
-	if status_ok then
-		capabilities = cmp_nvim_lsp.default_capabilities(capabilities)
+	if has_ufo then
+		capabilities.textDocument.foldingRange = {
+			dynamicRegistration = false,
+			lineFoldingOnly = true,
+		}
 	end
 
 	return capabilities

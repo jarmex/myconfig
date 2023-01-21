@@ -8,7 +8,7 @@ treesitter_config.setup({
 	ensure_installed = "all",
 	highlight = {
 		enable = true,
-		--additional_vim_regex_highlighting = true,
+		additional_vim_regex_highlighting = false,
 	},
 	autopairs = {
 		enable = true,
@@ -17,9 +17,6 @@ treesitter_config.setup({
 	context_commentstring = {
 		enable = true,
 		enable_autocmd = false,
-		config = {
-			typescript = { __default = "// %s", __multiline = "/* %s */" },
-		},
 	},
 	autotag = {
 		enable = true,
@@ -39,8 +36,26 @@ treesitter_config.setup({
 			keymaps = {
 				["af"] = "@function.outer",
 				["if"] = "@function.inner",
-				["ac"] = "@class.outer",
-				["ic"] = "@class.inner",
+				["at"] = "@class.outer",
+				["it"] = "@class.inner",
+				["ac"] = "@call.outer",
+				["ic"] = "@call.inner",
+				["aa"] = "@parameter.outer",
+				["ia"] = "@parameter.inner",
+				["al"] = "@loop.outer",
+				["il"] = "@loop.inner",
+				["ai"] = "@conditional.outer",
+				["ii"] = "@conditional.inner",
+				["a/"] = "@comment.outer",
+				["i/"] = "@comment.inner",
+				["ab"] = "@block.outer",
+				["ib"] = "@block.inner",
+				["as"] = "@statement.outer",
+				["is"] = "@scopename.inner",
+				["aA"] = "@attribute.outer",
+				["iA"] = "@attribute.inner",
+				["aF"] = "@frame.outer",
+				["iF"] = "@frame.inner",
 			},
 		},
 		move = {
@@ -79,12 +94,9 @@ treesitter_config.setup({
 			},
 		},
 	},
-})
-
-require("ts_context_commentstring.internal").update_commentstring({
-	key = "__multiline",
-})
-
-require("ts_context_commentstring.internal").calculate_commentstring({
-	location = require("ts_context_commentstring.utils").get_cursor_location(),
+	query_linter = {
+		enable = true,
+		use_virtual_text = true,
+		lint_events = { "BufWrite", "CursorHold" },
+	},
 })

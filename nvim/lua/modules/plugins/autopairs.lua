@@ -10,17 +10,21 @@ npairs.setup({
 		javascript = { "string", "template_string" },
 		java = false,
 	},
-	disable_filetype = { "TelescopePrompt", "spectre_panel" },
+	disable_filetype = { "TelescopePrompt", "spectre_panel", "vim" },
+	enable_check_bracket_line = false,
 	fast_wrap = {
 		map = "<C-h>",
 		chars = { "{", "[", "(", '"', "'" },
-		pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
-		offset = 0, -- Offset from pattern match
+		pattern = [=[[%'%"%)%>%]%)%}%,]]=],
+		-- pattern = string.gsub([[ [%'%"%)%>%]%)%}%,] ]], "%s+", ""),
+		-- offset = 0, -- Offset from pattern match
 		end_key = "$",
 		keys = "qwertyuiopzxcvbnmasdfghjkl",
 		check_comma = true,
-		highlight = "PmenuSel",
-		highlight_grey = "LineNr",
+		highlight = "Search",
+		-- highlight = "PmenuSel",
+		highlight_grey = "Comment",
+		--  highlight_grey = "LineNr",
 	},
 })
 
@@ -31,4 +35,4 @@ if not cmp_status_ok then
 end
 
 -- https://github.com/windwp/nvim-autopairs
-cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done({ map_char = { tex = "" } }))
+cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())

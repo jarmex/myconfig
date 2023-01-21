@@ -8,8 +8,10 @@ function M.project_files()
 	--local opts = vim.deepcopy(options)
 	opts.prompt_prefix = "~> "
 	opts.theme = "ivy"
-	local ok = pcall(require("telescope.builtin").git_files, opts)
-	if not ok then
+	vim.fn.system("git rev-parse --is-inside-work-tree")
+	if vim.v.shell_error == 0 then
+		require("telescope.builtin").git_files(opts)
+	else
 		require("telescope.builtin").find_files(opts)
 	end
 end
