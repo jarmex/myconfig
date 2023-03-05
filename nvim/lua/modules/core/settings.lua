@@ -10,8 +10,10 @@ local default_options = {
 	fileencoding = "utf-8", -- the encoding written to a file
 	foldenable = true, -- Enable folding
 	-- changed from manual to expr. Adapted from https://github.com/abzcoding/nvim/blob/main/lua/options.lua
-	foldlevel = 6, -- Fold by default
+	foldlevel = 99, -- Fold by default
+	foldlevelstart = 99,
 	foldmethod = "expr", -- folding, set to "expr" for treesitter based folding
+	foldcolumn = "1",
 	-- end of change
 	foldexpr = "", -- set to "nvim_treesitter#foldexpr()" for treesitter based folding
 	hidden = true, -- required to keep multiple buffers and open multiple buffers
